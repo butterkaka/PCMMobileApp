@@ -1,0 +1,40 @@
+page-alarm-log-page {
+    ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    ion-col {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        height: 1px;
+    }
+    .card {
+        margin-bottom: 1px !important;
+    }
+    .button-value-toggle {
+        width: 50%
+    }
+    .item-trns {
+        border-color: rgba(0, 0, 0, 0);
+        background-color: rgba(0, 0, 0, 0);
+    }
+
+    .alarmColor{
+        color: blue !important;
+    }
+}

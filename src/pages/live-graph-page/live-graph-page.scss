@@ -1,0 +1,81 @@
+page-live-graph-page {
+    .scroll-content {
+        background-color: map-get($colors, light);
+    }
+    ion-card-header {
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    canvas {
+        height: fit-content;
+        width: fit-content;
+    }
+    ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        height: 1px;
+    }
+    ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        // padding: 0 90px 1px;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    .item-trns {
+        border-color: rgba(0, 0, 0, 0);
+        background-color: rgba(0, 0, 0, 0);
+    }
+    ion-col {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    .card {
+        margin-bottom: 5px !important;
+    }
+    .content-with-full-height {
+        height: 100%;
+    }
+    .equal-sized-item {
+        height: 16.7%
+    }
+    .button-value-toggle {
+        width: 50%;
+    }
+    // canvas {
+    //     width: 100%;
+    //     height: 60vh
+    // }
+    .chartWrapper {
+        position: relative;
+    }
+    .chartWrapper>canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+    }
+    .chartAreaWrapper {
+        overflow-x: scroll;
+        position: relative;
+        width: 100%;
+    }
+    .chartAreaWrapper2 {
+        position: relative;
+        height: 300px;
+    }
+    .divPadding {
+        padding: 0px 10px;
+    }
+}

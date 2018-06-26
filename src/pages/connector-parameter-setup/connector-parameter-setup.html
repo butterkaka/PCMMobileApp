@@ -1,0 +1,207 @@
+<!--
+  Generated template for the ConnectorParameterSetupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<!-- <ion-header>
+    <ion-navbar hideBackButton="true">
+        <ion-grid no-padding>
+            <ion-row no-padding class="align-center">
+                <ion-col no-padding col-auto>
+                    <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+          <ion-icon large name="ios-arrow-round-back-outline"  (tap)="back()" ></ion-icon>
+          </button>
+                </ion-col>L
+                <ion-col class="align-center">
+                    <div no-margin>
+                        <h5 no-margin>
+                            {{connectorValObj.pinValue}}
+                        </h5>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
+</ion-header> -->
+
+<ion-header>
+    <ion-navbar hideBackButton="true">
+        <ion-grid no-padding>
+            <ion-row no-padding class="align-center">
+                <ion-col no-padding col-auto>
+                    <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+                        <ion-icon large name="ios-arrow-round-back-outline" (tap)="back()"></ion-icon>
+                    </button>
+
+                </ion-col>
+                <ion-col class="align-center">
+                    <div no-margin>
+                        <h5 no-margin> {{pinValueHeader}}
+                        </h5>
+                    </div>
+
+                </ion-col>
+                <button ion-buttons small class="icon settings-style ion-navicon" start>
+                    <ion-icon *ngIf="!mockData" large name="ios-settings-outline" (tap)=" navigateToSettings()"></ion-icon>
+                 
+                    <!-- <ion-icon large name="bluetooth" color=danger  (tap)=" navigateToSettings()" ></ion-icon> -->
+                </button>
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
+</ion-header>
+
+<ion-content overflow-scroll="false">
+    <ion-card class="card">
+        <div padding>
+            <ion-grid>
+                <ion-row>
+                    <h2>Function for input:</h2>
+                </ion-row>
+                <ion-row color="primary">
+                    <hr/>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-select no-padding interface="popover" style=" max-width: 100% !important;" [(ngModel)]="functionInput" (ngModelChange)="functionInputChange()" [class.disable]="!pcmchanneldataservice.passwordFlag">
+                            <ion-option text-wrap *ngFor="let param of connectorParameterSetupList" [value]="param.value">{{param.name}}</ion-option>
+                        </ion-select>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-card>
+
+    <ion-card *ngIf="checkFunctionInputToshowOtherControls()" [class.hide]="pT100HideFlag" class="card">
+        <div padding>
+            <ion-grid>
+                <ion-row>
+                    <h2>Sensor Unit</h2>
+                </ion-row>
+                <ion-row color="primary">
+                    <hr/>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-select no-padding interface="popover" style=" max-width: 100% !important;" [(ngModel)]="sensorUnit" (ngModelChange)="sensorUnitChangePrompt()" [class.disable]="!pcmchanneldataservice.passwordFlag">
+                            <!-- <ion-option>bar</ion-option>
+                            <ion-option>Celsius</ion-option>
+                            <ion-option>Rev/min</ion-option> -->
+                            <ion-option text-wrap *ngFor="let param of sensorUnitDropdownList" [value]="param.value">{{param.name}}</ion-option>
+                        </ion-select>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-card>
+
+    <!--  <ion-card *ngIf="checkFunctionInputToshowOtherControls()" class="card">
+        <div padding>
+            <ion-grid>
+                <ion-row>
+                    <h2>Display Unit:{{displayUnit}}</h2>
+                </ion-row>
+                 <ion-row color="primary">
+                    <hr/> 
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-select no-padding interface="popover" style=" max-width: 100% !important;" [(ngModel)]="displayUnit" (ngModelChange)="displayUnitChange()">
+                            <ion-option text-wrap *ngFor="let param of displayUnitDropdownList" [value]="param.value">{{param.name}}</ion-option>
+                        </ion-select>
+                    </ion-col>
+                </ion-row>
+    </ion-grid>
+    </div>
+    </ion-card> -->
+
+    <ion-card *ngIf="checkToshowDIControls()" class="card">
+        <div padding>
+            <ion-grid>
+                <ion-row>
+                    <h2>Active low</h2>
+                </ion-row>
+                <ion-row color="primary">
+                    <hr/>
+                </ion-row>
+                <ion-row>
+                    <ion-col>
+                        <ion-select no-padding interface="popover" style=" max-width: 100% !important;" [(ngModel)]="invertedDigital" [class.disable]="!pcmchanneldataservice.passwordFlag">
+                            <ion-option value="1">Yes</ion-option>
+                            <ion-option value="0">No</ion-option>
+                        </ion-select>
+                    </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-card>
+
+    <ion-list no-lines>
+        <div class="item-trns" *ngFor="let item of analogInputParameterItems">
+            <ion-card *ngIf="checkToshowIncrementDecrementControl(item)" class="card">
+                <ion-item>
+                    <div>
+                        <ion-grid>
+                            <ion-row>
+                                <h2>{{ item.Title }}: </h2>
+                            </ion-row>
+                            <ion-row color="primary">
+                                <hr/>
+                            </ion-row>
+                            <ion-row>
+                                <ion-col col-2>
+                                    <button [disabled]="!pcmchanneldataservice.passwordFlag" no-margin ion-button small icon-only class="button-value-toggle" (tap)="decrement(item)">
+      <ion-icon name='md-arrow-round-down'  class="icon-center"></ion-icon>
+    </button>
+                                </ion-col>
+                                <ion-col justify-content-center col-8>
+                                    <div margin-horizontal (tap)="valueChangePrompt(item)" class="custom-center">
+                                        <!--<ion-item no-padding center> -->
+                                        {{ item.Value| number:'1.0-1' }} {{ item.Metric }}
+                                        <!--</ion-item>-->
+                                    </div>
+                                </ion-col>
+                                <ion-col col-2>
+                                    <button [disabled]="!pcmchanneldataservice.passwordFlag" no-margin small ion-button icon-only class="button-value-toggle" (tap)="increment(item)">
+      <ion-icon large name='md-arrow-round-up'  class="icon-center"></ion-icon>
+     </button>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </div>
+                </ion-item>
+            </ion-card>
+        </div>
+    </ion-list>
+    <!--  -->
+    <div  class="card">
+        <ion-col [hidden]="!graphHideFlag" class="align-center">
+            <div no-padding no-margin>
+                <h5 no-margin>
+                    {{graphHeader}}
+                </h5>
+            </div>
+        </ion-col>
+        <div>
+            <canvas [hidden]="!graphHideFlag"  no-padding id="myChart" style=" width: 100%;height: auto !important;"></canvas>
+        </div>
+    </div>
+
+</ion-content>
+<ion-footer>
+    <div color="transparent" margin-horizontal>
+        <!--<ion-row >      
+      <ion-col padding  col-6><button ion-button block>Calibrate</button></ion-col>      
+      <ion-col padding  col-6> <button class="buttons-setparameters" [disabled]="disabled" (tap)="disabled=true;writeRegulatorSetupParameters()" ion-button>Set Parameters</button></ion-col>     
+      </ion-row>-->
+        <ion-row>
+            <ion-col width-50>
+                <button [disabled]="disableCalibrateButton() || !pcmchanneldataservice.passwordFlag" (tap)="calibrateConnecterSetupPinParameters()" ion-button block>Calibrate</button>
+            </ion-col>
+            <ion-col width-50>
+                <button [disabled]="connecterSetupSetpinButtonDisabled" (tap)="writeConnecterSetupPinParameters()" ion-button block>{{writeData}}</button>
+            </ion-col>
+        </ion-row>
+    </div>
+</ion-footer>

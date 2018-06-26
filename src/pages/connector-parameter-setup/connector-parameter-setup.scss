@@ -1,0 +1,57 @@
+page-connector-parameter-setup {
+    .item-trns {
+        border-color: rgba(0, 0, 0, 0);
+        background-color: rgba(0, 0, 0, 0);
+        width: 100%;
+        margin-bottom: 5px !important;
+    }
+    .item-trns ion-col {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    .item-trns ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+    .item-trns hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        height: 1px;
+    }
+    .buttons-right {
+        float: right;
+        width: 45%;
+    }
+    .buttons-left {
+        width: 45%;
+    }
+    .select-icon {
+        right: 5px;
+    }
+    .select-width {
+        max-width: 100% !important;
+    }
+    .settings-style {
+        font-size: 30px;
+        background-color: #ffffff !important;
+        border-style: none;
+        color: map-get($colors, rexroth-blue-grey-100)!important;
+        padding: 5px 5px 5px 5px !important;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    .hide {
+        display: none;
+    }
+    .disable {
+        pointer-events: none;
+    }
+    .card {
+        margin-bottom: 5px !important;
+    }
+}

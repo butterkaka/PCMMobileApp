@@ -1,0 +1,25 @@
+page-device-main-page {
+    .buttons-right {
+        float: right;
+        width: 45% !important;
+    }
+    .buttons-left {
+        width: 45% !important;
+    }
+    h5 {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    settings-style {
+        font-size: 30px;
+        background-color: #ffffff !important;
+        border-style: none;
+        color: map-get($colors, rexroth-blue-grey-100)!important;
+        padding: 5px 5px 5px 5px !important;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
