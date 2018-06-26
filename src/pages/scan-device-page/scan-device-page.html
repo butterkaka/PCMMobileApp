@@ -1,0 +1,71 @@
+<!--
+  Generated template for the ScanDevicePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.  
+-->
+
+<!-- <div id="pcmapp-overlay" [style.display]="splash ? 'flex': 'none'">
+    <ion-content>
+        <div class="first-row">
+            <div class="outer-img">
+                <img class="full-image" src="assets/images/Splash_draft.png" alt="">
+            </div>
+        </div>
+        <div class="rowFill">
+        </div>
+        <div class="row2">
+            <div>
+                <div class="header-style">PCM mobile app</div>
+                <div class="version-style">V.2.11</div>
+            </div>
+        </div>
+        <div class="row3">
+            <img src="assets/images/index.png" alt="">
+        </div>
+    </ion-content>
+</div> -->
+
+<ion-header>
+    <ion-navbar>
+        <ion-title>
+            <h5>PCM devices</h5>
+        </ion-title>
+        <div class="title-image image-custom" align="right">
+            <img src="assets/images/Logo_Bosch_Rexroth.jpg">
+        </div>
+    </ion-navbar>
+</ion-header>
+
+<ion-content class="content">
+    <ion-refresher (ionRefresh)="doRefreshScan($event)">
+            <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+
+    <div padding>
+        <button ion-button block class="scan-button" (click)="scanDevices()">Scan</button>
+    </div>
+    <div>
+        <ion-list inset>
+            <ion-item-sliding *ngFor="let device of devices">
+                <!-- <button *ngIf="device.name!=null && device.name!='' && device.name.startsWith('PCM')" (click)="connectToDevice(device)" ion-item> -->
+                <button *ngIf="device.name!=null && device.name!=''" (click)="connectToDevice(device)" ion-item>
+                    <h2>{{device.name}}</h2>
+                </button>
+            </ion-item-sliding>
+        </ion-list>
+    </div>
+    <div class="spinner-c" padding>
+        <ion-spinner *ngIf="isScanning==true" name="crescent"></ion-spinner>
+    </div>
+
+
+    <!--<button (click)="Test()">Test</button>
+        <div *ngFor="let vall of testValArra">
+         <h3>{{vall}}</h3>
+        </div>-->
+</ion-content>
+
+<ion-footer padding>
+    <button ion-button block (click)="IOOverviewMokDataConnect()">I/O overview</button>
+</ion-footer>

@@ -1,0 +1,34 @@
+<!--
+  Generated template for the IOSetupPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+    <ion-navbar hideBackButton="true">
+        <ion-grid no-padding>
+            <ion-row no-padding class="align-center">
+                <ion-col no-padding col-auto>
+                    <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+          <ion-icon large name="ios-arrow-round-back-outline"  (tap)="back()" ></ion-icon>
+          </button>
+                </ion-col>
+                <ion-col class="align-center">
+                    <div no-margin>
+                        <h5 no-margin>
+                            {{ioSetupHeader}}
+                        </h5>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
+</ion-header>
+
+
+<ion-content padding overflow-scroll="false">
+    <!--<div>{{deviceName}}</div>-->
+    <div class="image-io2">
+        <img-map src="assets/images/pcm_box_header.png" [markers]="markers" (change)="onChange($event)" markerRadius="20"></img-map>
+    </div>
+</ion-content>

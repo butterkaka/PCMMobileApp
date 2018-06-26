@@ -1,0 +1,75 @@
+
+// .image-io{
+//   height: auto;
+//   width: auto;
+//   margin: auto;
+//   display: block;
+// }
+
+//  .content-io{
+//     max-width: 100%;
+//     max-height: 100%;
+//  }
+
+ .image-io{
+    height:100%;
+    position: absolute;
+    margin: 0 auto;  
+    left: 0;
+    right: 0;
+    width: auto;  
+ }
+
+//  .image-io2.img-map{
+//     height:100%!important;    
+//     position: absolute;
+//     margin: 0 auto;  
+//     left: 0;
+//     right: 0;
+//     width: auto;  
+//  }
+
+// .image-io2{
+//      height:inherit!important;  
+// }
+
+ .img-map canvas, .img-map img {             
+    margin: 0 auto;      
+    right: 0;    
+    height:100%!important;
+     }
+
+// .img-map img{
+//     height:100%!important;
+//     width:auto;
+// }
+.image-io2{
+    height:100%!important;
+}
+// .image-io2 img-map{  
+//      height:100%!important;  
+// }
+
+div.img-map{
+    height:100%!important;  
+}
+
+div
+
+
+
+#image-div{
+//background-image: url("assets/images/pcm_box.png");
+//background-image: url("../assets/images/pcm_box.png");
+}
+
+// .background{
+//     background: url('/assets/images/pcm_box.png') no-repeat;   
+// }
+
+.abc{
+    color: red;
+    background-color: yellow;
+}
+
+

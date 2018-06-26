@@ -1,0 +1,40 @@
+page-device-setup-page {
+    .card-margin {
+        margin-top: 5px;
+    }
+    ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 0 90px 1px;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        height: 1px;
+    }
+    ion-title {
+        position: absolute;
+        top: 0;
+        left: 0;
+        // padding: 0 90px 1px;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+    }
+    ion-card-header {
+        font-weight: bold;
+    }
+    .canvas-size {
+        height: 30%;
+    }
+}

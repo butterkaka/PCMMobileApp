@@ -1,0 +1,108 @@
+#pcmapp-overlay {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100000;
+    width: 100%;
+    height: 100%;
+    //background-color: #002a3e;
+    background-color: white;
+    padding: 10px;
+}
+
+.first-row {
+    background: white;
+    height: 74%!important;
+}
+
+.full-image {
+    overflow: hidden;
+    height: inherit;
+}
+
+.outer-img {
+    height: 100%!important;
+}
+
+.row2 {
+    height: 13%!important;
+    width: 100%;
+    background-color: #a3bac8;
+    padding: 5px;
+}
+
+.row3 {
+    flex: 1;
+    background: white;
+    height: 12%!important;
+    padding: 10px;
+}
+
+.rowFill {
+    height: 1%;
+}
+
+.image-custom img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.title-image {
+    margin-right: 8px;
+    margin-top: 8px;
+    height: 27px;
+}
+
+ion-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0 90px 1px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.toolbar-background {
+    background-color: white;
+}
+
+.content {
+    background-color: #f2f2f2;
+}
+
+.scan-button {
+    // width:100%;
+    // Rexroth Blue-Grey 100
+    background-color: #264461;
+    text-transform: none;
+    color: white;
+}
+
+.list-button {
+    width: 100%;
+}
+
+.spinner-c {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+h5 {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.header-style {
+    text-align: left;
+    font-size: 20px;
+    color: #5a7c91;
+}
+
+.version-style {
+    color: #333333;
+}

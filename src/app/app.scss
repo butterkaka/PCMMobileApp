@@ -1,0 +1,124 @@
+// http://ionicframework.com/docs/v2/theming/
+// App Global Sass
+// --------------------------------------------------
+// Put style rules here that you want to apply globally. These
+// styles are for the entire app and not just one component.
+// Additionally, this file can be also used as an entry point
+// to import other Sass files to be included in the output CSS.
+//
+// Shared Sass variables, which can be used to adjust Ionic's
+// default Sass variables, belong in "theme/variables.scss".
+//
+// To declare rules for a specific mode, create a child rule
+// for the .md, .ios, or .wp mode classes. The mode class is
+// automatically applied to the <body> element in the app.
+.content {
+    background-color: map-get($colors, off-white) !important;
+    color: map-get($colors, rexroth-blue-grey-80);
+}
+
+.button {
+    background-color: map-get($colors, rexroth-blue-grey-100) !important;
+    color: #fff;
+    padding: 5px 20px 5px 20px!important;
+    margin: 5px 10px 10px 0px;
+}
+
+.button:hover {
+    background-color: map-get($colors, rexroth-blue-grey-dark) !important;
+}
+
+// .mynavbar{
+//   height: 200px !important;
+// }
+// .bar-header .title {
+//    line-height: 70px;
+// }
+.scroll-content {
+    overflow-y: auto !important;
+}
+
+.button-custom,
+.button-custom.icon:before {
+    font-size: 40px;
+    // position: absolute;
+    //  height:  100% !important;
+    //   height: 4rem;
+    // flex:1 0 100%;
+    background-color: map-get($colors, rexroth-blue-grey-100) !important;
+    border-style: none;
+    color: #ffffff !important;
+    padding: 5px 20px 5px 20px!important;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    //  &.md {
+    //         font-size:  4rem !important;
+    //         background-color: #1f3044 !important;
+    //         border-style: none;
+    //         color: #ffffff;
+    //         padding: 5px 20px 5px 20px!important;
+    //         border-top-left-radius: 0;
+    //         border-top-right-radius: 0;
+    //         border-bottom-left-radius: 0;
+    //         border-bottom-right-radius: 0;
+    //     }
+    //     &.wp {
+    //         margin-top:4rem;
+    //         background-color: #1f3044 !important;
+    //         border-style: none;
+    //         color: #ffffff;
+    //         padding: 5px 20px 5px 20px!important;
+    //         border-top-left-radius: 0;
+    //         border-top-right-radius: 0;
+    //         border-bottom-left-radius: 0;
+    //         border-bottom-right-radius: 0;
+    //     }
+    //     &.ios {
+    //         font-size: 4rem !important;
+    //         background-color: #1f3044 !important;
+    //         border-style: none;
+    //         color: #ffffff;
+    //         padding: 5px 20px 5px 20px!important;
+    //         border-top-left-radius: 0;
+    //         border-top-right-radius: 0;
+    //         border-bottom-left-radius: 0;
+    //         border-bottom-right-radius: 0;
+    //     }
+}
+
+.button-custom {
+    margin: -5px -5px -5px -5px !important;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.header-style {
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.icon-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+
+ion-label{
+     white-space:normal !important;   
+}
+
+// .button-custom.icon:hover { background-color: map-get($colors,rexroth-blue-grey-dark)  !important; }
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}

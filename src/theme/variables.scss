@@ -1,0 +1,56 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/v2/theming/
+$font-path: "../assets/fonts";
+@import "ionic.globals";
+// Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files.
+// To view all the possible Ionic variables, see:
+// http://ionicframework.com/docs/v2/theming/overriding-ionic-variables/
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+$colors: ( primary: #1f3044, secondary: #5a7c91, danger: #f53d3d, light: #f2f2f2, dark: #222, off-white: #f2f2f2, rexroth-blue-grey-5: #e5eef2, rexroth-blue-grey-20: #cfdde7, rexroth-blue-grey-40: #a3bac8, rexroth-blue-grey-80: #5a7c91, rexroth-blue-grey-100: #264461, rexroth-blue-grey-dark: #1f3044, rexroth-blue-grey-web: #333, rexroth-grey: #999, rexroth-red: #df0024, rexroth-orange: #fdac10, rexroth-green: #64a70b);
+$toolbar-background: white;
+$toolbar-height: 44px;
+$bar-height: 44px !default;
+$bar-title-font-size: 17px !default;
+$bar-footer-height: $bar-height !default;
+$bar-subheader-height: $bar-height !default;
+$bar-subfooter-height: $bar-height !default;
+// App iOS Variables
+// --------------------------------------------------
+// iOS only Sass variables can go here
+// App Material Design Variables
+// --------------------------------------------------
+// Material Design only Sass variables can go here
+// App Windows Variables
+// --------------------------------------------------
+// Windows only Sass variables can go here
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+// @import "ionic.theme.default";
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/v2/ionicons/
+@import "ionic.ionicons";
+// Fonts
+// --------------------------------------------------
+@import "roboto";
+@import "noto-sans";
+$action-sheet-md-button-background: map-get($colors, rexroth-blue-grey-100);
+$action-sheet-ios-button-background: map-get($colors, rexroth-blue-grey-100);
+$action-sheet-wp-button-background: map-get($colors, rexroth-blue-grey-100);
+$alert-ios-button-background-color: map-get($colors, rexroth-blue-grey-100);
+$action-sheet-ios-button-background: map-get($colors, rexroth-blue-grey-100);
+// $card-wp-padding-left $card-wp-padding-right $card-md-padding-right $card-md-padding-left $card-ios-padding-left $card-ios-padding-right

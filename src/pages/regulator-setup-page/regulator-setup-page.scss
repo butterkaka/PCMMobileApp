@@ -1,0 +1,94 @@
+page-regulator-setup-page {
+    .item-trns {
+        border-color: rgba(0, 0, 0, 0);
+        background-color: rgba(0, 0, 0, 0);
+    }
+    ion-col {
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+    ion-grid {
+        height: 100%;
+        justify-content: center;
+    }
+    hr {
+        border: 0;
+        clear: both;
+        display: block;
+        width: 100%;
+        height: 1px;
+    }
+    .icon-style {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 50%;
+        height: 50%;
+        transform: translate(-50%, -50%);
+        width: 10px;
+        height: 10px;
+    }
+}
+
+.button-regulator1 {
+    width: 50%;
+    float: left;
+}
+
+.button-regulator2 {
+    width: 50%;
+    float: right;
+}
+
+.buttons-right {
+    float: right;
+    width: 45%;
+}
+
+.buttons-left {
+    width: 45%;
+}
+
+.button {
+    // width:100%;
+    // Rexroth Blue-Grey 100
+    background-color: #264461;
+    text-transform: none;
+    color: white;
+}
+
+ion-label {
+    font-size: 16px!important;
+}
+
+ion-icon {
+    display: inline-block;
+    vertical-align: middle;
+    // horizontal-align: middle;
+}
+
+.button-value-toggle {
+    width: 50%;
+}
+
+.select-icon {
+    right: 5px;
+}
+
+.select-width {
+    max-width: 100% !important;
+}
+
+.scroll-style {
+    width: 100%;
+    height: 85% !important
+}
+
+.content-style {
+    overflow-y: hidden;
+}
+
+.disable {
+    pointer-events: none;
+}
