@@ -19,7 +19,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
   templateUrl: 'swash-angle-setup.html',
 })
 export class SwashAngleSetupPage {
-
+  headerLabel = "Swash angle Setup";
   swashAngle;
   pPart;
   iPart;
@@ -35,6 +35,7 @@ export class SwashAngleSetupPage {
   atmQuestionObjectList: Array<AtmQuestionTypeModel>;
   atmQuestionInputObjList: Array<AtmQuestionTypeModel>;
   countAtmQList: number = 0;
+  intervalId;
 
   operation: string;
 
@@ -81,15 +82,23 @@ export class SwashAngleSetupPage {
   ionViewDidEnter() {
     this.disabled=false;
     this.initializeStartNotify();
+
     this.readRegualtorSetupParameters();
-    this.setTimeoutForViewUpdate();
+    this.startReadWithInterval(3);
+  }
+
+      /**
+   * 
+   * @event ionViewWillLeave - Event triggered when the page is about to leave to next page.  
+    */
+  ionViewWillLeave() {
+    clearInterval(this.intervalId);
   }
 
   /** 
-      *This is to update the view 
-      */
+  *This is to update the view 
+  */
   setTimeoutForViewUpdate() {
-
     // workaround to update the view for asynchronous update / rareley it doesint update the view to make sure update works this will be called twice
     setTimeout(() => {
       this.cd.detectChanges();
@@ -114,10 +123,22 @@ export class SwashAngleSetupPage {
     this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
   }
 
+  startReadWithInterval(count:number = 0){
+    count = Math.abs(count);
+    let infinite = count == 0 ? true : false;
+
+    this.intervalId = setInterval(()=> {
+      count--;
+      if(count == 0 && !infinite)
+        clearInterval(this.intervalId);
+      this.readRegualtorSetupParameters();
+    }, 1000);
+  }
+
   /** 
   * This is used to read the swashAngle setup paraemtrs from the device.  
   */
-  readRegualtorSetupParameters() {
+ readRegualtorSetupParameters() {
     this.operation = Constants.values.read;
     this.atmQuestionObjectList = [];
     // var swashAngleSetupInputList = PCMChannelDataService.getSwashsetupInputDetails();
@@ -135,7 +156,7 @@ export class SwashAngleSetupPage {
       this.operation = Constants.values.write;
       this.atmQuestionObjectList = [];
       this.countAtmQList = 0;
-       let val1;
+      let val1;
       let val2;
       let val3;
       let val4;
@@ -305,7 +326,7 @@ export class SwashAngleSetupPage {
   }
 
   /** 
-  * This is used to start the notify listener for the characteristic
+  * This is used to start the notify listener for the characteristics
   * @param {string} deviceID - The device details
   * @param {string} serviceID - The device details
   * @param {string} characteristicID - The device details  
@@ -314,7 +335,8 @@ export class SwashAngleSetupPage {
     this.ble.startNotification(deviceId, serviceUUID, characteristic).subscribe(buffer => {
       this.atmQuestionObjectList.push(new AtmQuestionTypeModel(new Uint8Array(buffer)));
       this.countAtmQList++;
-      if (this.operation == Constants.values.read && this.countAtmQList > 7) {
+      //if (this.operation == Constants.values.read && this.countAtmQList > 7) {
+      if (this.operation == Constants.values.read && this.countAtmQList >= 6) {
         this.setParameterValuesToUI();
         this.setItemValuesToUI();
       } else if (this.operation == Constants.values.write && this.countAtmQList > 8) {
@@ -337,7 +359,7 @@ export class SwashAngleSetupPage {
       }
     }, error => {
       console.log(JSON.stringify(error));
-    })
+    });
   }
 
 
@@ -515,7 +537,7 @@ export class SwashAngleSetupPage {
    * @param item - the item chosen from the list
    */
   valueChangePrompt(item) {
- if (this.pcmchanneldataservice.passwordFlag) {
+    if (this.pcmchanneldataservice.passwordFlag) {
     this.pcmchanneldataservice.alert = this.alertCtrl.create({
       title: item.name + ":",
       subTitle: Constants.messages.enterValueToBeSet,

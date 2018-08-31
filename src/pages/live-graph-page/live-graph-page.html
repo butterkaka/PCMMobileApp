@@ -24,7 +24,7 @@
         </ion-grid>
     </ion-navbar>
 </ion-header> -->
-<ion-header>
+<!-- <ion-header>
     <ion-navbar hideBackButton="true">
         <ion-grid no-padding>
             <ion-row no-padding class="align-center">
@@ -43,7 +43,30 @@
                 </ion-col>
                 <button ion-buttons small class="icon settings-style ion-navicon" start>
                     <ion-icon large name="ios-settings-outline" (tap)=" navigateToSettings()"></ion-icon>
-                    <!-- <ion-icon large name="bluetooth" color=danger  (tap)=" navigateToSettings()" ></ion-icon> -->
+                </button>
+            </ion-row>
+        </ion-grid>
+    </ion-navbar>
+</ion-header> -->
+
+<ion-header>
+    <ion-navbar hideBackButton="true" class="header-nav-style">
+        <ion-grid no-padding>
+            <ion-row no-padding class="align-center">
+                <ion-col no-padding col-auto>
+                    <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+                        <ion-icon large name="ios-arrow-round-back-outline" (tap)="back()"></ion-icon>
+                    </button>
+                </ion-col>
+                <ion-col class="align-center">
+                    <div no-margin>
+                        <h5 no-margin>
+                            {{headerLabel}}
+                        </h5>
+                    </div>
+                </ion-col>
+                <button ion-buttons no-padding class="icon button-custom-inverted small">
+                    <ion-icon *ngIf="true" name="settings" (tap)="navigateToSettings()"></ion-icon>
                 </button>
             </ion-row>
         </ion-grid>
@@ -51,18 +74,52 @@
 </ion-header>
 
 <ion-content overflow-scroll="false">
-
-    <ion-card no-padding class="card">
-        <div>
+<!-- <ion-card>
+        <div padding>
             <ion-grid>
                 <ion-row>
-                    <ion-col>
-                        <strong>Graph type:</strong>
-                    </ion-col>
+                    <h2>Graph input:</h2>
+                </ion-row>
+                <ion-row color="primary">
+                    <hr/>
+                </ion-row>
+                <ion-row>
+                <ion-col>
+                    <ion-select interface="popover" style=" max-width: 100% !important;" [(ngModel)]="liveGraphType" (ngModelChange)="onChange(1)"> -->
+                        <!-- <ion-option *ngFor="let liveGraphItem of liveGraphItems" value="{{liveGraphItem.name}}">
+                            {{liveGraphItem.name}}
+                        </ion-option> -->
+                        <!-- <ion-option value="1">Setpoint</ion-option>
+                        <ion-option value="2">Pressure</ion-option>
+                        <ion-option value="3">Swash angle</ion-option>
+                        <ion-option value="4">Pump current</ion-option>
+                        <ion-option value="5">Analog input 1</ion-option>
+                        <ion-option value="6">Analog input 2</ion-option>
+                        <ion-option value="7">Analog input 3</ion-option>
+                        <ion-option value="8">Analog input 4</ion-option>
+                        <ion-option value="9">Analog input 5</ion-option>
+                        <ion-option value="10">Analog input 6</ion-option>
+                        <ion-option value="11">PT100</ion-option>
+                    </ion-select>
+                </ion-col>
+                </ion-row>
+            </ion-grid>
+        </div>
+    </ion-card> -->
+
+
+    <ion-card class="card">
+        <div padding>
+            <ion-grid>
+                <ion-row>
+                    <h2>Graph input:</h2>
+                </ion-row>
+                <ion-row color="primary">
+                    <hr/>
                 </ion-row>
                 <ion-row>
                     <ion-col>
-                        <ion-select interface="popover" style=" max-width: 100% !important;" [(ngModel)]="liveGraphType" (ngModelChange)="onChange(1)">
+                        <ion-select interface="popover" style="max-width: 100% !important;" [(ngModel)]="liveGraphType" (ngModelChange)="onChange(1)">
                             <!-- <ion-option *ngFor="let liveGraphItem of liveGraphItems" value="{{liveGraphItem.name}}">
                                 {{liveGraphItem.name}}
                             </ion-option> -->
@@ -91,7 +148,7 @@
 
     </ion-card>
     <div no-padding class="divPadding">
-        <button ion-button no-padding [disabled]="ifPT100" *ngIf="currentToggleFlag" (tap)=" analogToggle()" block>{{toggleValue}}</button>
+        <button ion-button no-padding [disabled]="ifPT100" *ngIf="currentToggleFlag" (tap)="analogToggle()" block>{{toggleValue}}</button>
     </div>
     <ion-card no-padding class="card">
         <!-- <ion-card-header margin-top no-padding>
@@ -99,7 +156,7 @@
         </ion-card-header>
         <ion-card-content padding> -->
         <div padding>
-            <canvas no-padding id="myChart" style=" width: 100%;height: 55vh;"></canvas>
+            <canvas no-padding id="myChart" style="width:100%;height: 55vh;"></canvas>
         </div>
         <!-- <canvas no-padding baseChart [datasets]="chartData" [colors]="chartColors" [labels]=" chartLabels" [legend]="chartLegend" [options]="chartOptions" [chartType]="chartType" style="width: 100%; height: 60vh"></canvas> -->
         <!-- </ion-card-content> -->

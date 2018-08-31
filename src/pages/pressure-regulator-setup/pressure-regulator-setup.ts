@@ -18,12 +18,12 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
   templateUrl: 'pressure-regulator-setup.html',
 })
 export class PressureRegulatorSetupPage {
-
-  pressureRegulator = 0;;
-  pPart = 0;;
-  iPart = 0;;
-  dPart = 0;;
-  invertFeedbackDirection = 0;;
+  headerLabel="Pressure regulator setup";
+  pressureRegulator = 0;
+  pPart = 0;
+  iPart = 0;
+  dPart = 0;
+  invertFeedbackDirection = 0;
 
   pPartGain = 0;
   dPartGain = 0;
@@ -85,7 +85,14 @@ export class PressureRegulatorSetupPage {
     this.disabled = false;
     this.initializeStartNotify();
     this.readRegualtorSetupParameters();
-    this.setTimeoutForViewUpdate();
+    setTimeout(() => {
+      this.readRegualtorSetupParameters();
+    },400);
+    setTimeout(() => {
+      this.readRegualtorSetupParameters();
+    },200);
+
+    //this.setTimeoutForViewUpdate();
   }
 
   /** 
@@ -326,7 +333,7 @@ export class PressureRegulatorSetupPage {
   * This is used to start the notify listener for the characteristic
   * @param {string} deviceID - The device details
   * @param {string} serviceID - The device details
-  * @param {string} characteristicID - The device details  
+  * @param {string} characteristicID - The device details
   */
   startNotify(deviceId, serviceUUID, characteristic) {
     this.ble.startNotification(deviceId, serviceUUID, characteristic).subscribe(buffer => {

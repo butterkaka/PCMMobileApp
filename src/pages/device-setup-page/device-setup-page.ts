@@ -18,6 +18,8 @@ import { FileOpener } from '@ionic-native/file-opener'
 // For Android only comment this both for IOS
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
+import { GESTURE_PRIORITY_MENU_SWIPE } from 'ionic-angular/umd/gestures/gesture-controller';
+import { fromEventPattern } from 'rxjs';
 declare let FilePicker: any;
 
 /**
@@ -31,7 +33,8 @@ declare let FilePicker: any;
   templateUrl: 'device-setup-page.html',
 })
 export class DeviceSetupPage {
-
+  connectorUIList = [];
+  functionInputParameterList=[];
   deviceObject: DeviceModel;
   DeviceSetupChanneDetails; //Gets the details of channel and subchannel for the button clicked
   operation = "";
@@ -43,11 +46,15 @@ export class DeviceSetupPage {
   isFileCreated = false;
   isLoading = false;
   parameterObjectLoad;
+  intervalId;
+  readIntervalCount: number = 0;
   isFileLoaded = false;
   filePlatformSpecificPathDataDirectory;
+  inputParameterCount = 19;
   allparameterCount = 94;
   platformSpeceficProvidedFileName;
   parameterFileObjectIdMapped;
+  headerLabel = "Device setup";
   //FilePicker: any;
 
   items;
@@ -85,21 +92,43 @@ export class DeviceSetupPage {
     console.log('ionViewDidLoad DeviceSetup');
   }
 
+  /**
+   * 
+   * @event ionViewWillLeave - Event triggered when the page is about to leave to next page.  
+  */
+  ionViewWillLeave() {
+    clearInterval(this.intervalId);
+  }
+
   /** 
   * @event ionViewDidEnter  
   */
   ionViewDidEnter() {
     //console.log(this.connectorPinType);
+    //this.connectorList = PCMChannelDataService.getconnectorSetupDetails("DI");  
+    this.connectorUIList = [];
+    this.functionInputParameterList = [];
     this.operation = "";
+    this.readIntervalCount = 0;
+
+    // prepare list to use when reading connector setup
+    PcmParameterDataSaveServiceProvider.getAllParametersList().forEach(element => {
+      if(element.name == Constants.values.functionInput)
+        this.functionInputParameterList.push(element);
+    });
+
     this.initializeStartNotify();
-    this.setTimeoutForViewUpdate();
+
+    this.readConnectorParameter();
+    this.startReadWithInterval(4);
+
+    //this.setTimeoutForViewUpdate();
   }
 
   /** 
     *This is to update the view 
     */
   setTimeoutForViewUpdate() {
-
     // workaround to update the view for asynchronous update / rareley it doesint update the view to make sure update works this will be called twice
     setTimeout(() => {
       this.cd.detectChanges();
@@ -155,21 +184,27 @@ export class DeviceSetupPage {
         }
       }
       else if (this.operation == Constants.values.read) {
-        this.atmQuestionObjectList.push(new AtmQuestionTypeModel(new Uint8Array(buffer)))
-        console.log(this.atmQuestionObjectList.toString())
+        this.atmQuestionObjectList.push(new AtmQuestionTypeModel(new Uint8Array(buffer)));
+        console.log(this.atmQuestionObjectList.toString());
         this.countAtmQList++;
-        if(this.countAtmQList== 6)
+       //if(this.countAtmQList== 6)
         if (this.page == "ramp") {
           this.navCtrl.push("RampSetupPage", { deviceObject: this.deviceObject, items: this.items, atmQuestionObjectList: this.atmQuestionObjectList });
         }
       }
-
       else {
           this.atmQuestionObjectList.push(new AtmQuestionTypeModel(new Uint8Array(buffer)));
           this.countAtmQList++;
-          //console.log("Count List" + this.countAtmQList);
+          console.log("Count List: " + this.countAtmQList);
+          console.log("inputParameterCount: " + this.inputParameterCount);
           if (this.operation == Constants.values.write) {
             this.checkWriteStatus();
+          }
+          else if(this.operation == "getParameterValuesTest" && this.countAtmQList > (this.inputParameterCount-1)){
+            console.log(this.countAtmQList + "test getParameterValuesTest");
+            this.loadValueToConnectorParameter();
+            this.populateConnectorParameterList();
+            console.log("just keeps on going...");
           }
           else if (this.operation == Constants.values.SaveToFile && this.countAtmQList > (this.allparameterCount - 1)) {
             this.LoadValuesToParameterFileObject();
@@ -191,13 +226,156 @@ export class DeviceSetupPage {
     this.navCtrl.pop();
   }
 
+  stopReadWithInterval(){
+    clearInterval(this.intervalId);
+  }
 
+  startReadWithInterval(count:number = 0){
+    count = Math.abs(count);
+    let infinite = count == 0 ? true : false;
+
+    this.intervalId = setInterval(()=> {
+      count--;
+      if(count == 0 && !infinite)
+        clearInterval(this.intervalId);
+      this.readConnectorParameter();
+    }, 1000);
+  }
+
+
+  async readConnectorParameter(){
+    // if(this.readIntervalCount < 5){
+    //   this.readIntervalCount++;
+      this.operation = "getParameterValuesTest";
+      this.atmQuestionObjectList = [];
+      this.countAtmQList = 0;
+      // PcmParameterDataSaveServiceProvider.getAllParametersList().forEach(element => {
+      //   if(element.name == Constants.values.functionInput)
+      //     this.functionInputParameterList.push(element);
+      // });
+
+      this.inputParameterCount = this.functionInputParameterList.length;
+      //this.inputParameterCount = 19;
+      this.isReadRunning = true;
+
+      for (let element of this.functionInputParameterList) {
+        var byteArray = new Uint8Array([Constants.values.rType, 0, element.channel, element.subchannel, 0, 0]);
+        this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
+        await this.sleep(15);
+      }
+
+      this.isReadRunning = false;
+    // }
+    // else
+    //   this.stopReadWithInterval();
+  }
+
+  loadValueToConnectorParameter(){
+    console.log("load started");
+    this.atmQuestionObjectList.forEach(element => {
+      this.functionInputParameterList.forEach(input => {
+        if (element.channel == input.channel && element.subChannel == input.subchannel) {
+          input.value = element.value32Bit1;
+        }
+      });
+    });
+
+    //this.populateConnectorParameterList();
+  }
+
+  populateConnectorParameterList(){
+    this.connectorUIList = [];
+    let connectorParameterList = [];
+    //let connectors = ["LO","LI","PO","PI","O1","O2","AI","PT","X1","X2","X3","X4","DI","DO","USB"];
+    let connectors = ["DO","DI","X4","X3","X2","X1","AI"];
+
+    // let connectorSetupDetails = PCMChannelDataService.getconnectorSetupDetails("DI");
+    // connectorSetupDetails.forEach(element => {
+    //   console.log(element.pinValue);
+    // });
+
+    this.functionInputParameterList.forEach(element => {
+      if(element.value != 0){
+        connectorParameterList.push(element);
+      }
+    });
+
+    connectorParameterList.forEach(parameter => {
+      connectors.forEach(connector => {
+          PCMChannelDataService.getconnectorSetupDetails(connector).forEach(connectorDetail => {
+            if(connectorDetail.channel == parameter.channel){
+              this.connectorUIList.push({ "pinNum": connectorDetail.pinNum,
+               "pinValue": connectorDetail.pinValue,
+                "channel" : connectorDetail.channel,
+                "connector": connector,
+                "value": parameter.value,
+                "setupDetail": this.getconnectorParameterDetailName(connector, connectorDetail.pinValue, parameter.value)
+              });
+            }
+        });
+      });
+    });
+    this.cd.detectChanges();
+  }
+
+
+  getconnectorParameterDetailName(connector, pinValue, value){
+    let name = "";
+    let connectorParameterSetupList = [];
+
+    if (connector == Constants.values.AI || pinValue == Constants.values.AnalogIn3Value ||
+      pinValue == Constants.values.AnalogIn4Value || pinValue == Constants.values.AnalogIn5Value
+      || pinValue == Constants.values.AnalogIn6Value) {
+      connectorParameterSetupList = PCMChannelDataService.getconnectorParameterDropdownList(Constants.values.AI);
+    } else if (connector == Constants.values.DI || connector == Constants.values.DO) {
+      connectorParameterSetupList = PCMChannelDataService.getconnectorParameterDropdownList(Constants.values.DIO);
+    } else if (pinValue == Constants.values.DigitalIn1Value
+      || pinValue == Constants.values.DigitalIn2Value || pinValue == Constants.values.DigitalIn3Value
+      || pinValue == Constants.values.DigitalIn4Value) {
+      connectorParameterSetupList = PCMChannelDataService.getconnectorParameterDropdownList(Constants.values.DI);
+    } else if (connector == Constants.values.PT) {
+      connectorParameterSetupList = PCMChannelDataService.getconnectorParameterDropdownList(Constants.values.PT);
+    }
+
+    connectorParameterSetupList.forEach(detail => {
+      if(value == detail.value)
+        name = detail.name;
+    });
+
+    return name;
+  }
+
+  showOrHideConnectorSetupList(){
+    return this.connectorUIList != null && this.connectorUIList.length > 0 ? true : false;
+    // if(this.connectorUIList != null){
+    //   if(this.)
+
+
+    // }
+
+    // return false;
+  }
+
+    /** 
+    * This is to navigate to the connector paramter setup page
+    * @param {connectorVal} string - the selected connector pin value 
+    */
+  navigateToConnectorParameterPage(connectorVal){
+    this.navCtrl.push("ConnectorParameterSetupPage",{connectorValObj: connectorVal, connector:connectorVal.connector});
+  }
 
   /** 
       *This is to navigate to PumpSetupPage
   */
   launchPumpSetupPage() {
     this.navCtrl.push(PumpSetupPage, { deviceObject: this.deviceObject });
+  }
+
+    /**
+  * On click of Nav bar settings button, navigate to Settings page
+  */
+  navigateToSettings() {
+    this.navCtrl.push("SettingsPage", { deviceObject: this.deviceObject });
   }
 
   /** 
@@ -212,7 +390,6 @@ export class DeviceSetupPage {
     // this.page = "ramp"
     // this.countAtmQList = 0;
     // this.readSetupParameters()
-
     this.navCtrl.push("RampSetupPage", { deviceObject: this.deviceObject });
   }
 
@@ -224,7 +401,6 @@ export class DeviceSetupPage {
   *This is to navigate to IOSetupPage
   */
   navigateToIOSetup() {
-    //this.navCtrl.push(IOSetupPage);
     this.navCtrl.push(IOSetupPage, { deviceObject: this.deviceObject, ioSetupHeader: Constants.values.ioSetup });
   }
 
@@ -445,7 +621,6 @@ export class DeviceSetupPage {
         this.pcmchanneldataservice.loaderGlobal.dismiss();
       }
     }, 4000);
-
   }
 
 
@@ -480,8 +655,6 @@ export class DeviceSetupPage {
     }
 
   }
-
-
 
   /**
   * This will get values read from device and store it in the object
@@ -1130,12 +1303,7 @@ export class DeviceSetupPage {
     }
 
   }
-  /**
-  * On click of Nav bar settings button, navigate to Settings page
-  */
-  navigateToSettings() {
-    this.navCtrl.push("SettingsPage", { deviceObject: this.deviceObject });
-  }
+
 
 
   readSetupParameters() {

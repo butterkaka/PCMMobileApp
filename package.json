@@ -19,7 +19,7 @@
         "@angular/http": "4.0.0",
         "@angular/platform-browser": "4.0.0",
         "@angular/platform-browser-dynamic": "4.0.0",
-        "@ionic-native/ble": "^3.10.3",
+        "@ionic-native/ble": "^3.14.0",
         "@ionic-native/core": "^3.10.3",
         "@ionic-native/email-composer": "^4.3.2",
         "@ionic-native/file": "^4.3.1",
@@ -87,7 +87,10 @@
             "cordova-plugin-filepicker": {},
             "cordova-plugin-email": {},
             "cordova-plugin-file-opener2": {},
-            "cordova-plugin-compat": {}
+            "cordova-plugin-compat": {},
+            "cordova-plugin-ble-central": {
+                "BLUETOOTH_USAGE_DESCRIPTION": " "
+            }
         },
         "platforms": [
             "android"

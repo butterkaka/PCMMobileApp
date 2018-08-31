@@ -26,25 +26,23 @@
 </ion-header> -->
 
 <ion-header>
-    <ion-navbar hideBackButton="true">
+    <ion-navbar hideBackButton="true" class="header-nav-style">
         <ion-grid no-padding>
             <ion-row no-padding class="align-center">
                 <ion-col no-padding col-auto>
-                    <button ion-buttons no-padding class="icon button-custom ion-navicon" (tap)="back()" start>
-                        <ion-icon large name="ios-arrow-round-back-outline" ></ion-icon>
+                    <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+                        <ion-icon large name="ios-arrow-round-back-outline" (tap)="back()"></ion-icon>
                     </button>
-
                 </ion-col>
                 <ion-col class="align-center">
                     <div no-margin>
-                        <h5 no-margin> Alarms
+                        <h5 no-margin>
+                            {{headerLabel}}
                         </h5>
                     </div>
-
                 </ion-col>
-                <button ion-buttons small class="icon settings-style ion-navicon" start>
-                    <ion-icon large name="ios-settings-outline" (tap)=" navigateToSettings()"></ion-icon>
-                    <!-- <ion-icon large name="bluetooth" color=danger  (tap)=" navigateToSettings()" ></ion-icon> -->
+                <button ion-buttons no-padding class="icon button-custom-inverted small">
+                    <ion-icon *ngIf="true" name="settings" (tap)="navigateToSettings()"></ion-icon>
                 </button>
             </ion-row>
         </ion-grid>
@@ -83,6 +81,13 @@
                         </div>
                     </ion-item>
                 </div>
+                <div no-padding class="item-trns" *ngFor="let alarmExtMsg of alarmsExtendedMessageList">
+                    <ion-item>
+                        <div class="alarmColor">
+                            * {{alarmExtMsg}}
+                        </div>
+                    </ion-item>
+                </div>
                 <div no-padding class="item-trns" *ngFor="let warnMsg of warningMessageList">
 
                     <ion-item>
@@ -92,10 +97,16 @@
                     </ion-item>
                 </div>
                 <div no-padding class="item-trns" *ngFor="let twarnMsg of tempWarningMessageList">
-
                     <ion-item>
                         <div>
                             * {{twarnMsg}}
+                        </div>
+                    </ion-item>
+                </div>
+                <div no-padding class="item-trns" *ngFor="let warnExtMsg of warningExtendedMessageList">
+                    <ion-item>
+                        <div>
+                            * {{warnExtMsg}}
                         </div>
                     </ion-item>
                 </div>
@@ -151,7 +162,6 @@
         <ion-card-content no-padding>
             <ion-list lines no-padding>
                 <div no-padding class="item-trns" *ngFor="let halrmMsg of hardwareAlarmsMessageLogList">
-
                     <ion-item>
                         <div>
                             * {{halrmMsg}}
@@ -159,15 +169,20 @@
                     </ion-item>
                 </div>
                 <div no-padding class="item-trns" *ngFor="let alarmMsg of alarmsMessageLogList">
-
                     <ion-item>
                         <div>
                             * {{alarmMsg}}
                         </div>
                     </ion-item>
                 </div>
+                <div no-padding class="item-trns" *ngFor="let alarmExtMsg of alarmsExtendedMessageLogList">
+                    <ion-item>
+                        <div>
+                            * {{alarmExtMsg}}
+                        </div>
+                    </ion-item>
+                </div>
                 <div no-padding class="item-trns" *ngFor="let warnMsg of warningMessageLogList">
-
                     <ion-item>
                         <div>
                             * {{warnMsg}}
@@ -182,6 +197,15 @@
                         </div>
                     </ion-item>
                 </div>
+
+                <div no-padding class="item-trns" *ngFor="let warnExtMsg of warningExtendedMessageLogList">
+                    <ion-item>
+                        <div>
+                            * {{warnExtMsg}}
+                        </div>
+                    </ion-item>
+                </div>
+
             </ion-list>
         </ion-card-content>
     </ion-card>
@@ -239,12 +263,12 @@
         </ion-col>
     </ion-row> -->
     <ion-row>
-        <ion-col width-50>
+        <ion-col width-100>
             <button ion-button (tap)="clearLogs()" block>{{writeData}}</button>
             <!-- Clear Log -->
         </ion-col>
-        <ion-col width-50>
+        <!-- <ion-col width-50>
             <button ion-button (tap)="navigateToLiveGraph()" block>Live graph</button>
-        </ion-col>
+        </ion-col> -->
     </ion-row>
 </ion-footer>

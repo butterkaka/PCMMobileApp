@@ -17,6 +17,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
   templateUrl: 'ramp-setup.html',
 })
 export class RampSetupPage {
+  headerLabel = "Ramp setup";
   shutdownRamp = 0;
   positiveRampForwardDirection = 0;
   negativeRampForwardDirection = 0;
@@ -68,7 +69,26 @@ export class RampSetupPage {
     this.disabled = false;
     // this.SetParameterValuesToUI();
     // this.setItemValuesToUI();
-    this.readRampSetupParameters();
+    setTimeout(() => {
+      this.readRampSetupParameters();
+    },300);
+    setTimeout(() => {
+      this.readRampSetupParameters();
+    },200);
+    //this.setTimeoutForViewUpdate();
+  }
+
+    /** 
+      *This is to update the view 
+      */
+  setTimeoutForViewUpdate() {
+    setTimeout(() => {
+      this.cd.detectChanges();
+    }, 200);
+    setTimeout(() => {
+      this.cd.detectChanges();
+    }, 300);
+
   }
 
 

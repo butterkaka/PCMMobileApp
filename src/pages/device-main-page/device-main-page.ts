@@ -8,6 +8,7 @@ import { PCMChannelDataService } from '../../providers/pcm-channel-data-service'
 import { Constants } from '../../shared/app.constant';
 import { Storage } from '@ionic/storage';
 import { Idle } from '@ng-idle/core';
+import { LiveGraphPage } from './../live-graph-page/live-graph-page';
 // import { Keepalive } from '@ng-idle/keepalive';
 
 /**
@@ -21,6 +22,7 @@ import { Idle } from '@ng-idle/core';
   templateUrl: 'device-main-page.html',
 })
 export class DeviceMainPage {
+
   runValue;
   pointValue: number = 0;
   pressureValue: any = '-';
@@ -45,6 +47,7 @@ export class DeviceMainPage {
   temperatureUnitVal;
   pressureFlag: boolean = false;
   swashAngleFlag: boolean = false;
+  headerLabel = "Main page";
   /**
    * DeviceMainPage Constructor.
    * @constructor
@@ -93,11 +96,11 @@ export class DeviceMainPage {
    * @event ionViewWillLeave 
   */
   ionViewWillLeave() {
+    clearInterval(this.intervalId);
     this.flagOut = true;
     this.stopBlink();
 
   }
-
   /** 
     *This is to update the view 
     */
@@ -169,7 +172,10 @@ export class DeviceMainPage {
  */
   navigateToSettings() {
     this.navCtrl.push("SettingsPage", { deviceObject: this.deviceObject, firmwareVersion: this.firmwareVersion });
+  }
 
+  navigateToLiveGraph(){
+    this.navCtrl.push("LiveGraphPage", { deviceObject: this.deviceObject });
   }
 
 
@@ -243,16 +249,16 @@ export class DeviceMainPage {
   * This is used for going back to the previous page
   */
   back() {
+    this.disconnectBle(this.deviceObject.deviceId);
     this.navCtrl.pop();
-    this.disconnectBle();
   }
 
   /** 
   * This is used for disconnecting the ble
   */
-  disconnectBle() {
-    this.ble.disconnect(this.pcmChannelDataservice.deviceIdGlobal).then(() => {
-      console.log(this.deviceObject.deviceId + Constants.messages.disconnected)
+  disconnectBle(deviceId) {
+    this.ble.disconnect(deviceId).then(() => {
+      console.log(deviceId + " disconnectBle method " + Constants.messages.disconnected);
     }).catch(error => {
       console.log(JSON.stringify(error));
     });
@@ -437,7 +443,7 @@ export class DeviceMainPage {
   *  This is used to Stop Blinking the device
   */
   swipeEvent($event) {
-    this.disconnectBle();
+    this.disconnectBle(this.deviceObject.deviceId);
   }
 
 

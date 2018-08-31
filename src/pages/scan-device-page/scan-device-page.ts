@@ -1,4 +1,5 @@
 import { DeviceMainPage } from './../device-main-page/device-main-page';
+import { LicensePage} from './../license/license';
 import { Component } from '@angular/core';
 import { NavController, NavParams, LoadingController, AlertController, List } from 'ionic-angular';
 import { BLE } from '@ionic-native/ble';
@@ -8,6 +9,9 @@ import { Constants } from '../../shared/app.constant';
 import { IOSetupPage } from '../io-setup-page/io-setup-page'
 import { Idle } from '@ng-idle/core';
 import { AtmAuthenticationTypeModel } from '../../Models/AtmAuthenticationModel';
+import { Storage } from '@ionic/storage';
+import { registerModuleFactory } from '@angular/core/src/linker/ng_module_factory_loader';
+import { TimeoutDebouncer } from 'ionic-angular/umd/util/debouncer';
 /**
  * Generated class for the ScanDevicePage page.
  *
@@ -20,9 +24,9 @@ import { AtmAuthenticationTypeModel } from '../../Models/AtmAuthenticationModel'
   templateUrl: 'scan-device-page.html',
 })
 export class ScanDevicePage {
-
+  favorites = [];
   devices;
-  splash = false; //Make true if you want to recreate the new splash screen and uncomment in HTML
+  splash = this.isSplashShown() ? false : true; //Make true if you want to recreate the new splash screen and uncomment in HTML
   isScanning;
   scanError;
   deviceObject: DeviceModel;
@@ -31,6 +35,7 @@ export class ScanDevicePage {
   serviceUUID;
   characteristicId_;
   isChracteristicExist_v;
+  intervalId;
 
   //test 
   value32test;
@@ -39,6 +44,8 @@ export class ScanDevicePage {
   atmQuestionObjectList: Array<AtmQuestionTypeModel>;
   countAtmQList = 0;
   operation;
+
+  atmAuthenticationTypeObject: AtmAuthenticationTypeModel;
 
 
 
@@ -53,7 +60,7 @@ export class ScanDevicePage {
  */
   constructor(public navCtrl: NavController, public navParams: NavParams,
     private ble: BLE, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService, public alertCtrl: AlertController,
-    private idle: Idle) {
+    private idle: Idle, private storage: Storage) {
     this.devices = [
       { "name": "PCM device 1" },
       { "name": "PCM device 1" },
@@ -77,12 +84,18 @@ export class ScanDevicePage {
   * @event ionViewDidLoad event for ScanDevicePage
   */
   ionViewDidLoad() {
-    //  this.enableBluetooth();
-    //     setTimeout(() => {
-    //       this.splash = false;
-    //       this.scanDevices();
-    //     }, 1000);
+    setTimeout(() => {
+      this.scanDevices();
+      this.splash = false;
+    }, 4000);
+  }
 
+    /**
+   * 
+   * @event ionViewWillLeave - Event triggered when the page is about to leave to next page.  
+  */
+  ionViewWillLeave() {
+    clearInterval(this.intervalId);
   }
 
   ionViewDidLeave() {
@@ -101,13 +114,18 @@ export class ScanDevicePage {
   }
 
   ionViewDidEnter() {
-    // this.stopIdleTimer();
+    // this.stopIdleTimer(); 
+    //this.favorites = this.storage.get("favorites");
+    this.favorites = []
+    this.storage.get("favorites").then((result)=>{
+      console.log("favorites contains:" + result);
+      this.favorites = result;
+    });
+
     this.devices = [];
+    this.checkBluetoothEnabled();
     this.enableBluetooth();
-    // setTimeout(() => {
-    //   this.splash = false;
-    //   this.scanDevices();
-    // }, 3000);
+
     this.scanDevices();
     this.pcmchanneldataservice.passwordDeviceSetupPageFlag = false;
     this.pcmchanneldataservice.passwordFlag = false;
@@ -127,6 +145,19 @@ export class ScanDevicePage {
   }
 
 
+  isSplashShown() {
+    this.storage.get("isSplashShown").then((result)=>{
+        if(result){
+          return true;
+        }
+        else{
+          this.storage.set("isSplashShown", true);
+          return false;
+        }
+      });
+  }
+
+
   /*
   used when refresher is triggered
   */
@@ -136,14 +167,29 @@ export class ScanDevicePage {
   }
 
   /** 
-   * This is used to scan the near by devices. 
+   * This is used to scan the nearby devices. 
    */
   scanDevices() {
-    this.checkBluetoothEnabled();
+    //this.checkBluetoothEnabled();
+    //this.enableBluetooth();
 
     this.isScanning = true;
     console.log(Constants.messages.scaningStarted);
     this.devices = [];
+
+    this.ble.isConnected(this.pcmchanneldataservice.deviceIdGlobal)
+    .then(
+      () => { 
+        console.log("connected in scan method");
+        this.disconnectBle(this.pcmchanneldataservice.deviceIdGlobal);
+      },
+      () => { console.log("disconnected in scan method")}
+    );
+
+    // if (this.ble.isConnected) {
+    //   this.disconnectBle();
+    // }
+
 
     // this.ble.startScan([]).subscribe(device => {
     //   this.devices.push(device);
@@ -160,8 +206,6 @@ export class ScanDevicePage {
 
       }
     );
-
-
 
     setTimeout(() => {
       this.ble.stopScan().then(() => {
@@ -188,27 +232,23 @@ export class ScanDevicePage {
     //   {"name":""},
     //   {"name":"PCM Device 4"}
     // ];     
-
-    // setTimeout(() => {
-    //   this.isScanning = false;
-    // }, 3000);
   }
 
   deviceFound(device){
       if(device.name !== undefined){
-        console.log("Found " + JSON.stringify(device,null,2));
-        var adData = new Uint8Array(device.advertising);
-        console.log("advert data:" + adData);
-        console.log("length:" + adData.length);
+        //console.log("Found " + JSON.stringify(device,null,2));
+        //var adData = new Uint8Array(device.advertising);
+        //console.log("advert data:" + adData);
+        //console.log("length:" + adData.length);
+
         //console.log("advert data:" + JSON.stringify(device.advertising));
 
-        var SERVICE_DATA_KEY = '0x02';
-        var advertisingData = this.parseAdvertisingData(device.advertising);
-        var serviceData = advertisingData[SERVICE_DATA_KEY];
+        //var SERVICE_DATA_KEY = '0x02';
+        //var advertisingData = this.parseAdvertisingData(device.advertising);
+        //var serviceData = advertisingData[SERVICE_DATA_KEY];
         //console.log("advert content:" + serviceData);
 
-        console.log(this.bytesToString(serviceData));
-        
+        //console.log(this.bytesToString(serviceData));
         this.devices.push(device);
     }
   }
@@ -216,25 +256,27 @@ export class ScanDevicePage {
   bytesToString(buffer) {
     return String.fromCharCode.apply(null, new Uint8Array(buffer));
 }
+
+
   
 
-  parseAdvertisingData(buffer) {
-    var length, type, data, i = 0, advertisementData = {};
-    var bytes = new Uint8Array(buffer);
+parseAdvertisingData(buffer) {
+  var length, type, data, i = 0, advertisementData = {};
+  var bytes = new Uint8Array(buffer);
 
-    while (length !== 0) {
-        length = bytes[i] & 0xFF;
-        i++;
-        // decode type constants from https://www.bluetooth.org/en-us/specification/assigned-numbers/generic-access-profile
-        type = bytes[i] & 0xFF;
-        i++;
-        data = bytes.slice(i, i + length - 1).buffer; // length includes type byte, but not length byte
-        i += length - 2;  // move to end of data
-        i++;
-        advertisementData[this.asHexString(type)] = data;
-    }
+  while (length !== 0) {
+      length = bytes[i] & 0xFF;
+      i++;
+      // decode type constants from https://www.bluetooth.org/en-us/specification/assigned-numbers/generic-access-profile
+      type = bytes[i] & 0xFF;
+      i++;
+      data = bytes.slice(i, i + length - 1).buffer; // length includes type byte, but not length byte
+      i += length - 2;  // move to end of data
+      i++;
+      advertisementData[this.asHexString(type)] = data;
+  }
 
-    return advertisementData;
+  return advertisementData;
 }
 
 asHexString(i) {
@@ -283,55 +325,152 @@ asHexString(i) {
     alert.present();
   }
 
+  isConnected(deviceId){
+    this.ble.isConnected(deviceId)
+    .then(
+      () => { console.log(deviceId + " connected!"); return true;},
+      () => { console.log(deviceId + " disconnected!"); return false;}
+    );
+  }
+
+  disconnectBle(deviceId) {
+    this.enableBluetooth();
+    this.ble.disconnect(deviceId).then(() => {
+      console.log(deviceId + " disconnectBle method " + Constants.messages.disconnected);
+    }).catch(error => {
+      console.log(JSON.stringify(error));
+    });
+  }
+
+  showDialog(message){
+    alert(message);
+  }
+
+  /** 
+  * Add device to bluetooth favorite list
+  * @param {JSON} device - The device object has the device details
+  */
+  addToFavorites(device){
+    var exists  = false;
+    if(this.favorites != null){
+      this.favorites.forEach(element => {
+        if(element.name == device.name)
+          exists = true;
+      });
+    }
+    else 
+      this.favorites = [];
+
+    if(!exists){
+      this.favorites.push(device);
+      this.storage.set("favorites", this.favorites);
+    }
+  }
+
+    /** 
+  * remove device from bluetooth favorite list
+  * @param {JSON} device - The device object has the device details
+  */
+  removeFromFavorites(device){
+    this.favorites.splice(this.favorites.indexOf(device),1);
+    this.storage.set("favorites", this.favorites);
+  }
+
+  startReadWithInterval(count:number = 0){
+    count = Math.abs(count);
+    let infinite = count == 0 ? true : false;
+
+
+  }
+
   /** 
   * This is used to scan the near by devices.
   * @param {JSON} device - The device object has the device details
   */
   connectToDevice(device) {
-    this.enableBluetooth();
+    setTimeout(() => {
+    this.ble.stopScan().then(() => {
+      console.log(Constants.messages.scanningStopped);
+      });
+      this.isScanning = false;
+
+    }, 100);
+
+    //this.enableBluetooth();
+    this.ble.isConnected(device.id)
+    .then(
+      () => { 
+        console.log("# connected before connection try, disconnecting #");
+        this.disconnectBle(device.id);
+      },
+      () => { console.log("# GOOD! you're disconnected before connection try #")}
+    );
+    
     let loader = this.loadingController.create({
       content: Constants.messages.connecting
     });
+
     loader.present();
 
-    this.ble.connect(device.id).subscribe(deviceData => {
-      // if (this.ble.isConnected(device.id)) 
+    console.log("trying to connect in connectToDevice: " + device.id);
 
+    //setTimeout(()=>{
+    //this.intervalId = setInterval(()=>{
+
+    this.ble.connect(device.id).subscribe(deviceData => {
+      clearInterval(this.intervalId);
+      
+      console.log("!!!!connected!!!!");
       // working with one characteristic - check if the characteristic exist in this device
       this.characteristics = deviceData.characteristics;
+
+      console.log("characteristics: " + this.characteristics);
       this.isChracteristicExist_v = this.isCharacteristicExist();
       if (!this.isChracteristicExist_v) {
         console.log(Constants.messages.characteristicNotFound);
         loader.dismiss();
+        this.disconnectBle(device.id);
       }
       else {
         this.deviceObject = new DeviceModel(deviceData.name, deviceData.id, this.serviceUUID, deviceData.rssi, this.characteristicIDToUse);
         this.pcmchanneldataservice.deviceIdGlobal = this.deviceObject.deviceId;
         this.pcmchanneldataservice.deviceObjectGlobal = this.deviceObject;
         loader.dismiss();
+        // setTimeout(()=>{
+        //   this.enterPasswordPrompt();
+        // },100);
         this.initializeStartNotify();
-
-        this.gotoDevicePage();
+        this.enterPasswordPrompt();
+        
       }
-
-
     },
-      error => {
-        console.log(Constants.messages.errorConnect);
-        loader.dismiss();
-        // this.presentBleConnectionAlert(Constants.messages.bluetoothConnection, Constants.messages.bluetoothConnectionMessage);
-        this.scanDevices();
+    error => {
+      console.log(Constants.messages.errorConnect);
+      loader.dismiss();
+      this.presentBleConnectionAlert(Constants.messages.bluetoothConnection, Constants.messages.bluetoothConnectionMessage);
+      this.disconnectBle(device.id);
+      //this.scanDevices();
+    });
+  //},1000);
 
-      });
 
     setTimeout(() => {
-      if (!this.ble.isConnected) {
-        this.ble.disconnect(device.id);
-      }
-      loader.dismiss();
-      this.scanDevices();
+      this.ble.isConnected(device.id)
+      .then(
+        () => { 
+          console.log("connected in connectToDevice method");
+            if(!this.pcmchanneldataservice.passwordFlag && !this.pcmchanneldataservice.passwordPromt){
+              console.log("pcmchanneldataservice.passwordPromt:" + this.pcmchanneldataservice.passwordPromt)
+              this.disconnectBle(device.id);
+          }
+        },
+        () => { console.log("disconnected in connectToDevice method")}
+      );
 
-    }, 10000);
+      console.log("connect timeout");
+      clearInterval(this.intervalId);
+      loader.dismiss();
+    }, 4000);
 
 
     //Test Data For UI Testing
@@ -351,6 +490,96 @@ asHexString(i) {
   }
 
 
+  /**
+   * This is a alert controller popup which helps the user set specific value
+   * @param item - the item chosen from the list
+   */
+  enterPasswordPrompt() {
+    this.pcmchanneldataservice.passwordDeviceSetupPageFlag = true;
+    this.pcmchanneldataservice.passwordPromt = true;
+    this.pcmchanneldataservice.alert = this.alertCtrl.create({
+      title: Constants.messages.passwordTitle,
+      subTitle: Constants.messages.passwordConnectSubTitle,
+      enableBackdropDismiss: false,
+
+      inputs: [
+        {
+          name: Constants.messages.value,
+          placeholder: Constants.messages.passwordPlaceholder,
+          type: 'password'
+        }
+      ],
+      buttons: [
+        {
+          text: Constants.messages.apply,
+          handler: data => {
+            this.pcmchanneldataservice.passwordPromt = false;
+            try {
+              this.authenticatePassword(data.value);
+            } catch (error) {
+              console.log(JSON.stringify(error));
+            } 
+
+          }
+        },
+        {
+          text: Constants.messages.cancel,
+          handler: data => {
+            this.pcmchanneldataservice.passwordPromt = false;
+        
+            clearInterval(this.intervalId);
+
+            try {
+              this.disconnectBle(this.pcmchanneldataservice.deviceIdGlobal);
+            } catch (error) {
+              console.log(JSON.stringify(error));
+            }
+
+          }
+
+        }
+      ]
+    });
+    this.pcmchanneldataservice.alert.present();
+
+  }
+
+    /**
+ * In this method , the password is authenticated by sending it to PCM and getting the status (0 - true, 1 - false)
+ * @param password - The password entered by the user
+ */
+  authenticatePassword(password) {
+    //Data for authenticating password
+    try {
+      this.operation = Constants.values.authenticate;
+      this.countAtmQList = 0;
+
+      this.pcmchanneldataservice.passwordString = password;
+
+      var arr = [];
+      var byteArray = new Uint8Array(20);
+      byteArray[0] = 8;
+      byteArray[1] = 0;
+      for (var i = 0; i < password.length; i++) {
+        arr.push(password.charCodeAt(i));
+        console.log(arr[i]);
+        byteArray[i + 2] = arr[i]
+      }
+
+      // var byteArray = new Uint8Array([8, 0, 84, 104, 105, 115, 32, 105, 115, 32, 097, 32, 116, 101, 115, 116]);
+      this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
+      console.log(byteArray.buffer);
+    } catch (error) {
+      // only till we get the channels setup
+      console.log(JSON.stringify(error));
+    }
+
+  }
+
+  gotoLicensePage(){
+    this.navCtrl.push(LicensePage);
+  }
+
 
   /** 
    * This is used to navigate to the DevicePage. 
@@ -364,7 +593,7 @@ asHexString(i) {
     //   element.value16Bit = 0;
     //   if (element.value16Bit == 0) {
     this.pcmchanneldataservice.isIOOverViewMock = false;
-    this.navCtrl.push(DeviceMainPage)
+    this.navCtrl.push(DeviceMainPage);
 
     //   }
 
@@ -391,6 +620,7 @@ asHexString(i) {
     this.characteristics.forEach(element => {
       if (element.characteristic.toUpperCase() == this.characteristicIDToUse.toUpperCase()) {
         this.serviceUUID = element.service;
+        console.log("isCharacteristicExist serviceUUID " + this.serviceUUID);
         isExist = true;
       }
     });
@@ -423,20 +653,6 @@ asHexString(i) {
     this.pcmchanneldataservice.alert.present();
   }
 
-
-  // Test(){
-  //   this.value32test =17;
-  //   let i=0;
-  //   let val;
-  //   this.testValArra = [];
-  //   for(i=0;i<32;i++){
-  //       val = this.value32test & Math.pow(2,i);
-  //       if(val!=0){
-  //       this.testValArra.push(i+1);
-  //       }
-  //   }
-  // }
-
   /** 
    *This is used to provide mock data for IOOverview   
  */
@@ -467,6 +683,9 @@ asHexString(i) {
   }
 
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
 
   /** 
   * This is used to write value to device.
@@ -483,8 +702,6 @@ asHexString(i) {
       }).catch(error => {
         console.log(JSON.stringify(error));
       });
-
-
   }
 
   /** 
@@ -497,7 +714,24 @@ asHexString(i) {
 
     try {
       this.ble.startNotification(deviceId, serviceUUID, characteristic).subscribe(buffer => {
-        console.log("Test");
+        if (this.operation == Constants.values.authenticate) {
+          console.log("startNotify authenticate")
+          this.atmAuthenticationTypeObject = (new AtmAuthenticationTypeModel(new Uint8Array(buffer)));
+  
+          if (this.atmAuthenticationTypeObject.status == 0) {
+            console.log("Works");
+            this.pcmchanneldataservice.passwordFlag = true;
+            this.pcmchanneldataservice.presentAlert(Constants.messages.passwordAuthHeader, Constants.messages.passwordAuthSubheaderSuccess);
+            this.gotoDevicePage();
+          }
+          else {
+            console.log("Not Working");
+            this.pcmchanneldataservice.presentAlert(Constants.messages.passwordAuthHeader, Constants.messages.passwordAuthSubheaderFailure);
+            this.disconnectBle(deviceId);
+          }
+        }
+
+
       }, error => {
         console.log(JSON.stringify(error));
       });

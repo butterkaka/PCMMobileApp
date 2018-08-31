@@ -136,6 +136,7 @@ export const Constants = {
         'sensorUnitTitle': 'Display Unit',
         'passwordTitle': 'Authentication:',
         'passwordSubTitle': 'Please enter the password for write access authentication',
+        'passwordConnectSubTitle': 'Please enter the password to access device',
         'removePasswordSubTitle': 'Are you sure to remove write access from the device?',
         'passwordPlaceholder': 'Enter password',
         'newPasswordPlaceholder': 'Enter new password',
@@ -162,7 +163,7 @@ export const Constants = {
         'passwordAuthSubheaderFailure': 'Password authentication failed.<br/>Please try again.',
         'noPasswordSubheader': 'Please enter the password in <b>App settings</b> and try again.',
         'newPasswordNotMatching': 'New password entered does not match the re-enetered password.',
-        'oldPasswordNotMatching': 'Old password entered,does not match.',
+        'oldPasswordNotMatching': 'Old password entered does not match.',
         'newPasswordSubheaderSuccess': 'Password change successful.',
         'newPasswordSubheaderFailure': 'Password change failure.<br/><br/>Please try again later.',
         'passworddeauthSubheaderSuccess': 'Password de-authentication successful.<br/>Write access to user removed.',
@@ -216,8 +217,6 @@ export const Constants = {
         'USB': 'Mini USB',
         'connector': 'connector',
         'connectorValObj': 'connectorValObj',
-        'AnalogIn1Value': 'Analog in 1',
-        'AnalogIn2Value': 'Analog in 2',
         'AnalogIn1': 'AnalogIn1',
         'AnalogIn2': 'AnalogIn2',
         'workPressureInput': 3,
@@ -248,6 +247,8 @@ export const Constants = {
         'ditherFrequency': 'Dither frequency',
         'maxCurrentError': 'Max current error',
         'limpHomeRampTime': 'Limp home ramp time',
+        'AnalogIn1Value': 'Analog in 1',
+        'AnalogIn2Value': 'Analog in 2',
         'AnalogIn3Value': 'Analog in 3',
         'AnalogIn4Value': 'Analog in 4',
         'AnalogIn5Value': 'Analog in 5',
@@ -289,13 +290,17 @@ export const Constants = {
         'liveGraphPT100Value': 'PT100',
         'all': 'all',
         'Alarms': 'Alarms',
+        'AlarmsExtended': 'AlarmsExtended',
         'HardwareAlarms': 'HardwareAlarms',
         'Warnings': 'Warnings',
+        'WarningsExtended': 'WarningsExtended',
         'TempWarnings': 'TempWarnings',
         "E": "E",
         'AlarmsLog': 'AlarmsLog',
+        'AlarmsExtendedLog': 'AlarmsExtendedLog',
         'HardwareAlarmsLog': 'HardwareAlarmsLog',
         'WarningsLog': 'WarningsLog',
+        'WarningsExtendedLog': 'WarningsExtendedLog',
         'TempWarningsLog': 'TempWarningsLog',
         'shutdownRamp': 'Shutdown ramp',
         'positiveRampForwardDirection': 'Positive ramp forward direction',
@@ -451,14 +456,18 @@ export const Constants = {
         'liveGraphAnalogInput6Subhannel': 1,// 0
         'liveGraphPT100Subhannel': 0,
         'alarmCommunucationChannel': 45,
-        'warningsSubchannel': 4,
-        'tempWarningsSubchannel': 5,
-        'alarmsSubchannel': 7,
-        'hardwareAlarmsSubchannel': 6,
-        'warningsLogSubchannel': 8,
-        'tempWarningsLogSubchannel': 9,
-        'hardwareAlarmsLogSubchannel': 10,
-        'alarmsLogSubchannel': 11,
+        'warningsSubchannel': 4,    // warning
+        'warningsLogSubchannel': 8, // warning
+        'tempWarningsSubchannel': 5,    // warning
+        'tempWarningsLogSubchannel': 9, // warning
+        'alarmsSubchannel': 7,  // alarm
+        'alarmsLogSubchannel': 11, // alarm
+        'hardwareAlarmsSubchannel': 6,  // alarm
+        'hardwareAlarmsLogSubchannel': 10,  // alarm
+        'warningsExtendedSubchannel': 16,   //warning
+        'warningsExtendedLogSubchannel': 17,    //warning
+        'alarmsExtendedSubchannel': 13, //alarm
+        'alarmsExtendedLogSubchannel': 14,  //alarm
         'firmwareVersion': 23,
         'sswashAngleSubChannel': 13,
         'pPartSubChannel': 13,

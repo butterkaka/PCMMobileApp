@@ -26,6 +26,8 @@ export class PCMChannelDataService {
   passwordFlag: boolean = false;
   passwordString: string = "";
 
+  passwordPromt: boolean = false;
+
   //SI unit Global values
   temperatureDisplayUnit;
   pressureDisplayUnit;
@@ -159,14 +161,14 @@ export class PCMChannelDataService {
 
 
   pumpSetupItems = [
-    { Title: Constants.values.forwardMinCurrent, Value: 0, Min: 50, Max: 1500, Steps: 10, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 7 },
-    { Title: Constants.values.forwardMaxCurrent, Value: 0, Min: 50, Max: 1500, Steps: 10, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 8 },
-    { Title: Constants.values.reverseMinCurrent, Value: 0, Min: 50, Max: 1500, Steps: 10, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 9 },
-    { Title: Constants.values.reverseMaxCurrent, Value: 0, Min: 50, Max: 1500, Steps: 10, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 10 },
+    { Title: Constants.values.forwardMinCurrent, Value: 0, Min: 50, Max: 1500, Steps: 1, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 7 },
+    { Title: Constants.values.forwardMaxCurrent, Value: 0, Min: 50, Max: 1500, Steps: 1, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 8 },
+    { Title: Constants.values.reverseMinCurrent, Value: 0, Min: 50, Max: 1500, Steps: 1, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 9 },
+    { Title: Constants.values.reverseMaxCurrent, Value: 0, Min: 50, Max: 1500, Steps: 1, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 10 },
     { Title: Constants.values.coilResistance, Value: 0, Min: 1 , Max: 100 , Steps: 1 , Metric: 'ohm', rType: 2, wType: 3, channel: 30, subchannel: 4 },
     // { Title: 'PWM Frequency', Value: 100, Min: 100, Max: 10000, Steps: 100, Metric: 'Hz' }, --TBD
-    { Title: Constants.values.ditherAmplitude, Value: 0, Min: 0, Max: 500, Steps: 10, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 3 },
-    { Title: Constants.values.ditherFrequency, Value: 0, Min: 50, Max: 1000, Steps: 10, Metric: 'Hz', rType: 2, wType: 3, channel: 30, subchannel: 2 },
+    { Title: Constants.values.ditherAmplitude, Value: 0, Min: 0, Max: 500, Steps: 1, Metric: 'mA', rType: 2, wType: 3, channel: 30, subchannel: 3 },
+    { Title: Constants.values.ditherFrequency, Value: 0, Min: 50, Max: 1000, Steps: 1, Metric: 'Hz', rType: 2, wType: 3, channel: 30, subchannel: 2 },
     { Title: Constants.values.maxCurrentError, Value: 0, Min: 0, Max: 100, Steps: 1, Metric: '%', rType: 2, wType: 3, channel: 30, subchannel: 11 },
     // { Title: 'Limp Home Ramp Time', Value: 0, Min: 0, Max: 60, Steps: 1, Metric: 's', rType: 2, wType: 3, channel: 30, subchannel: 12 }
   ];
@@ -250,95 +252,95 @@ export class PCMChannelDataService {
 
     let connectorSetupDetails = {
       "LO": [
-        { "pinNum": "1", "pinValue": "Do not connect" },
-        { "pinNum": "2", "pinValue": "+24V power out" },
-        { "pinNum": "3", "pinValue": "Ground out" },
-        { "pinNum": "4", "pinValue": "Do not connect" },
-        { "pinNum": "5", "pinValue": "Do not connect" }
+        { "pinNum": "1", "pinValue": "Do not connect", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "+24V power out", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground out", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Do not connect", "channel" : 0 },
+        { "pinNum": "5", "pinValue": "Do not connect", "channel" : 0 }
       ],
       "LI": [
-        { "pinNum": "1", "pinValue": "Do not connect" },
-        { "pinNum": "2", "pinValue": "+24V power in" },
-        { "pinNum": "3", "pinValue": "Ground in" },
-        { "pinNum": "4", "pinValue": "Do not connect" },
-        { "pinNum": "5", "pinValue": "Do not connect" }
+        { "pinNum": "1", "pinValue": "Do not connect", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "+24V power in", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground in", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Do not connect", "channel" : 0 },
+        { "pinNum": "5", "pinValue": "Do not connect", "channel" : 0 }
       ],
       "PO": [
-        { "pinNum": "1", "pinValue": "+24V I/O power out" },
-        { "pinNum": "2", "pinValue": "+24V Pump power in" },
-        { "pinNum": "3", "pinValue": "Ground I/O out" },
-        { "pinNum": "4", "pinValue": "Ground I/O out" }
+        { "pinNum": "1", "pinValue": "+24V I/O power out", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "+24V Pump power in", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground I/O out", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Ground I/O out", "channel" : 0 }
       ],
       "PI": [
-        { "pinNum": "1", "pinValue": "+24V I/O power in" },
-        { "pinNum": "2", "pinValue": "+24V Pump power in" },
-        { "pinNum": "3", "pinValue": "Ground I/O in" },
-        { "pinNum": "4", "pinValue": "Ground I/O in" }
+        { "pinNum": "1", "pinValue": "+24V I/O power in", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "+24V Pump power in", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground I/O in", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Ground I/O in", "channel" : 0 }
       ],
       "O1": [
-        { "pinNum": "1", "pinValue": "Ground I/O" },
-        { "pinNum": "2", "pinValue": "Pump out" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Pump out" },
+        { "pinNum": "1", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Pump out", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Pump out", "channel" : 0 },
       ],
       "O2": [
-        { "pinNum": "1", "pinValue": "Ground I/O" },
-        { "pinNum": "2", "pinValue": "Pump out" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Pump out" },
+        { "pinNum": "1", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Pump out", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Pump out", "channel" : 0 },
       ],
       "AI": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Analog in 1" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Analog in 2" },
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Analog in 1", "channel" : Constants.channels.standaloneAnalog1FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Analog in 2", "channel" : Constants.channels.standaloneAnalog2FunctionChannel },
       ],
       "PT": [
-        { "pinNum": "1", "pinValue": "PT100 +" },
-        { "pinNum": "2", "pinValue": "PT100 + sense" },
-        { "pinNum": "3", "pinValue": "PT100 -" },
-        { "pinNum": "4", "pinValue": "PT100 - sense" },
+        { "pinNum": "1", "pinValue": "PT100 +", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "PT100 + sense", "channel" : 0 },
+        { "pinNum": "3", "pinValue": "PT100 -", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "PT100 - sense", "channel" : 0 },
       ],
       "X1": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Analog in 3" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Digital in 1" },
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Analog in 3", "channel" : Constants.channels.standaloneAnalog3FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Digital in 1", "channel" : Constants.channels.standaloneDigitalInput1FunctionChannel },
       ],
       "X2": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Analog in 4" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Digital in 2" },
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Analog in 4", "channel" : Constants.channels.standaloneAnalog4FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Digital in 2", "channel" : Constants.channels.standaloneDigitalInput2FunctionChannel },
       ],
       "X3": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Analog in 5" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Digital in 3" },
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Analog in 5", "channel" : Constants.channels.standaloneAnalog5FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Digital in 3", "channel" : Constants.channels.standaloneDigitalInput3FunctionChannel },
       ],
       "X4": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Analog in 6" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Digital in 4" },
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Analog in 6", "channel" : Constants.channels.standaloneAnalog6FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Digital in 4", "channel" : Constants.channels.standaloneDigitalInput4FunctionChannel },
       ],
       "DI": [
-        { "pinNum": "1", "pinValue": "+24V power" },
-        { "pinNum": "2", "pinValue": "Digital I/O 1" },
-        { "pinNum": "3", "pinValue": "Digital I/O 2" },
-        { "pinNum": "4", "pinValue": "Digital I/O 3" },
-        { "pinNum": "5", "pinValue": "Digital I/O 4" }
+        { "pinNum": "1", "pinValue": "+24V power", "channel" : 0 },
+        { "pinNum": "2", "pinValue": "Digital I/O 1", "channel" : Constants.channels.standaloneDigitalIO1FunctionChannel },
+        { "pinNum": "3", "pinValue": "Digital I/O 2", "channel" : Constants.channels.standaloneDigitalIO2FunctionChannel },
+        { "pinNum": "4", "pinValue": "Digital I/O 3", "channel" : Constants.channels.standaloneDigitalIO3FunctionChannel },
+        { "pinNum": "5", "pinValue": "Digital I/O 4", "channel" : Constants.channels.standaloneDigitalIO4FunctionChannel }
       ],
       "DO": [
-        { "pinNum": "1", "pinValue": "Digital I/O 5" },
-        { "pinNum": "2", "pinValue": "Digital I/O 6" },
-        { "pinNum": "3", "pinValue": "Ground I/O" },
-        { "pinNum": "4", "pinValue": "Digital I/O 7" },
-        { "pinNum": "5", "pinValue": "Digital I/O 8" }
+        { "pinNum": "1", "pinValue": "Digital I/O 5", "channel" : Constants.channels.standaloneDigitalIO5FunctionChannel },
+        { "pinNum": "2", "pinValue": "Digital I/O 6", "channel" : Constants.channels.standaloneDigitalIO6FunctionChannel },
+        { "pinNum": "3", "pinValue": "Ground I/O", "channel" : 0 },
+        { "pinNum": "4", "pinValue": "Digital I/O 7", "channel" : Constants.channels.standaloneDigitalIO7FunctionChannel },
+        { "pinNum": "5", "pinValue": "Digital I/O 8", "channel" : Constants.channels.standaloneDigitalIO8FunctionChannel }
       ],
       "USB": [
-        { "pinNum": "", "pinValue": "Not Configurable" }
+        { "pinNum": "", "pinValue": "Not Configurable", "channel" : 0  }
       ]
 
     }
@@ -393,7 +395,7 @@ export class PCMChannelDataService {
         { "value": "5", "name": "Threshold temp" }
       ],
       "DI": [
-        { "value": "0", "name": "Input disabled" },
+        { "value": "0", "name": "Disabled" },
         { "value": "1", "name": "Start drive" },
         { "value": "2", "name": "Reverse drive" },
         { "value": "3", "name": "Swash angle regulator enable" },
@@ -402,13 +404,14 @@ export class PCMChannelDataService {
         { "value": "6", "name": "Quickstop input" },
         { "value": "7", "name": "Warning input" },
         { "value": "8", "name": "Temperature warning input" },
-        { "value": "9", "name": "Alarm input" }
+        { "value": "9", "name": "Alarm input" },
+        { "value": "19", "name": "Disable Bluetooth input" }
       ], "PT": [
-        { "value": "0", "name": "disabled" },
+        { "value": "0", "name": "Disabled" },
         { "value": "5", "name": "threshold temp" }
       ],
       "DIO": [
-        { "value": "0", "name": "Input disabled" },
+        { "value": "0", "name": "Disabled" },
         { "value": "1", "name": "Start drive" },
         { "value": "2", "name": "Reverse drive" },
         { "value": "3", "name": "Swash angle regulator enable" },
@@ -421,6 +424,13 @@ export class PCMChannelDataService {
         { "value": "10", "name": "Alarm output" },
         { "value": "11", "name": "Warning output" },
         { "value": "12", "name": "Temperature warning output" },
+        { "value": "13", "name": "Drive started output" },
+        { "value": "14", "name": "Drive forward output" },
+        { "value": "15", "name": "Drive reverse output" },
+        { "value": "16", "name": "Swash reg active output" },
+        { "value": "17", "name": "Pressure reg active output" },
+        { "value": "18", "name": "Quickstop active output" },
+        { "value": "19", "name": "Disable Bluetooth input" }
       ]
     }
     if (connector == Constants.values.AI) {
@@ -748,7 +758,11 @@ export class PCMChannelDataService {
       { 'name': 'Alarms', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.alarmsLogSubchannel },
       { 'name': 'HardwareAlarms', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.hardwareAlarmsLogSubchannel },
       { 'name': 'Warnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.warningsLogSubchannel },
-      { 'name': 'TempWarnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.tempWarningsLogSubchannel }
+      { 'name': 'TempWarnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.tempWarningsLogSubchannel },
+      { 'name': 'WarningsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.warningsExtendedSubchannel },
+      { 'name': 'WarningsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.warningsExtendedLogSubchannel },
+      { 'name': 'AlarmsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.alarmsExtendedSubchannel },
+      { 'name': 'AlarmsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.alarmsExtendedLogSubchannel }
     ]
     return alarmAndWarnInputList;
   }
@@ -763,7 +777,9 @@ export class PCMChannelDataService {
       { 'name': 'Alarms', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.alarmsLogSubchannel },
       { 'name': 'HardwareAlarms', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.hardwareAlarmsLogSubchannel },
       { 'name': 'Warnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.warningsLogSubchannel },
-      { 'name': 'TempWarnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.tempWarningsLogSubchannel }
+      { 'name': 'TempWarnings', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.tempWarningsLogSubchannel },
+      { 'name': 'AlarmsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.alarmsExtendedLogSubchannel },
+      { 'name': 'WarningsExtended', 'rType': 2, 'wType': 3, 'channel': Constants.channels.alarmCommunucationChannel, 'subchannel': Constants.channels.warningsExtendedLogSubchannel }
     ]
     return logInputList;
   }
@@ -838,7 +854,25 @@ export class PCMChannelDataService {
         { 'value': '23', 'name': 'Digital input 9 monitor lost' },
         { 'value': '24', 'name': 'Digital input 10 monitor lost' },
         { 'value': '25', 'name': 'Digital input 11 monitor lost' },
-        { 'value': '26', 'name': 'Digital input 12 monitor lost' }
+        { 'value': '26', 'name': 'Digital input 12 monitor lost' },
+        { 'value': '27', 'name': 'Pump power too low' },
+        { 'value': '28', 'name': 'I/O power too low' },
+        { 'value': '29', 'name': 'Control power too' },
+        { 'value': '30', 'name': 'Control power high' },
+        { 'value': '31', 'name': 'MCU temperature too high' }
+      ],
+      'AlarmsExtended': [
+        { 'value': '1', 'name': 'Pump power too high' },
+        { 'value': '2', 'name': 'I/O power too high' },
+        { 'value': '3', 'name': 'Pump driver temp to high' },
+        { 'value': '4', 'name': 'Pump driver temp to low' },
+        { 'value': '5', 'name': 'I/O temp too high' },
+        { 'value': '6', 'name': 'I/O temp too low' },
+        { 'value': '7', 'name': 'undefined' },
+        { 'value': '8', 'name': 'Control temp too low' },
+        { 'value': '9', 'name': 'Pump driver over heated' },
+        { 'value': '10', 'name': 'EEPROM commmunication error' },
+        { 'value': '11', 'name': 'EEPROM memory data loss error' }
       ],
       'Warnings': [
         { 'value': '1', 'name': 'Analog 1 min warn' },
@@ -847,8 +881,8 @@ export class PCMChannelDataService {
         { 'value': '4', 'name': 'Analog 4 min warn' },
         { 'value': '5', 'name': 'Analog 5 min warn' },
         { 'value': '6', 'name': 'Analog 6 min warn' },
-        { 'value': '7', 'name': 'Undefined' },
-        { 'value': '8', 'name': 'Undefined' },
+        { 'value': '7', 'name': 'No configuration found in memory' },
+        { 'value': '8', 'name': 'Passwprd has not been changed from factory setting' },
         { 'value': '9', 'name': 'Analog 1 max warn' },
         { 'value': '10', 'name': 'Analog 2 max warn' },
         { 'value': '11', 'name': 'Analog 3 max warn' },
@@ -869,10 +903,43 @@ export class PCMChannelDataService {
         { 'value': '26', 'name': 'Digital warn 10' },
         { 'value': '27', 'name': 'Digital warn 11' },
         { 'value': '28', 'name': 'Digital warn 12' },
-        { 'value': '29', 'name': 'Undefined' },
-        { 'value': '30', 'name': 'Undefined' },
-        { 'value': '31', 'name': 'Undefined' },
-        { 'value': '32', 'name': 'Undefined' },
+        { 'value': '29', 'name': 'Swash angle input has a bad signal level' },
+        { 'value': '30', 'name': 'Error too high for swash angle regulation' },
+        { 'value': '31', 'name': 'Work pressure input has a bad signal level' },
+        { 'value': '32', 'name': 'Error too high for pressure regulation' },
+      ],
+      'WarningsExtended': [
+        { 'value': '1', 'name': 'AI Analog input 1 bad signal level warning' },
+        { 'value': '2', 'name': 'AI Analog input 2 bad signal level warning' },
+        { 'value': '3', 'name': 'X1 Analog input 3 bad signal level warning' },
+        { 'value': '4', 'name': 'X2 Analog input 4 bad signal level warning' },
+        { 'value': '5', 'name': 'X3 Analog input 5 bad signal level warning' },
+        { 'value': '6', 'name': 'X4 Analog input 6 bad signal level warning' },
+        { 'value': '7', 'name': 'PT100 bad signal level warning' },
+        { 'value': '8', 'name': 'Al over current on +24V out' },
+        { 'value': '9', 'name': 'X1 over current on +24V out' },
+        { 'value': '10', 'name': 'X2 over current on +24V out' },
+        { 'value': '11', 'name': 'X3 over current on +24V out' },
+        { 'value': '12', 'name': 'X4 over current on +24V out ' },
+        { 'value': '13', 'name': 'DI over current on +24V out' },
+        { 'value': '14', 'name': 'Digital output driver overheat warning' },
+        { 'value': '15', 'name': 'DI digital output 1 over current warning' },
+        { 'value': '16', 'name': 'DI digital output 2 over current warning ' },
+        { 'value': '17', 'name': 'DI digital output 3 over current warning' },
+        { 'value': '18', 'name': 'DI digital output 4 over current warning' },
+        { 'value': '19', 'name': 'DO digital output 5 over current warning' },
+        { 'value': '20', 'name': 'DO digital output 6 over current warning' },
+        { 'value': '21', 'name': 'DO digital output 7 over current warning' },
+        { 'value': '22', 'name': 'DO digital output 8 over current warning' },
+        { 'value': '23', 'name': 'Pump voltage in too high warning' },
+        { 'value': '24', 'name': 'Pump voltage in too low warning' },
+        { 'value': '25', 'name': 'I/O voltage in too high warning' },
+        { 'value': '26', 'name': 'I/O voltage in too low warning' },
+        { 'value': '27', 'name': 'Control voltage in too high warning' },
+        { 'value': '28', 'name': 'Control voltage in too low warning' },
+        { 'value': '29', 'name': 'Pump driver temperature too high warning' },
+        { 'value': '30', 'name': 'I/O driver temperature too high warning' },
+        { 'value': '31', 'name': 'Control temperature too high warning' }
       ],
       'TempWarnings': [
         { 'value': '1', 'name': 'Analog 1 min warn temp' },
@@ -907,9 +974,6 @@ export class PCMChannelDataService {
         { 'value': '30', 'name': 'Undefined' },
         { 'value': '31', 'name': 'PT100 min warn temp' },
         { 'value': '32', 'name': 'PT100 max warn temp' }
-
-
-
       ], 'AlarmsLog': [
         { 'value': '1', 'name': 'Analog 1 min alarm log' },
         { 'value': '2', 'name': 'Analog 2 min alarm log' },
@@ -944,6 +1008,19 @@ export class PCMChannelDataService {
         { 'value': '31', 'name': 'PT100 min alarm log' },
         { 'value': '32', 'name': 'PT100 max alarm log' }
       ],
+      'AlarmsLogExtended': [
+        { 'value': '1', 'name': 'Pump power too high log' },
+        { 'value': '2', 'name': 'I/O power too high log' },
+        { 'value': '3', 'name': 'Pump driver temp too high log' },
+        { 'value': '4', 'name': 'Pump driver temp too low log' },
+        { 'value': '5', 'name': 'I/O temp too high log' },
+        { 'value': '6', 'name': 'I/O temp too low log' },
+        { 'value': '7', 'name': 'undefined' },
+        { 'value': '8', 'name': 'Control temp too low log' },
+        { 'value': '9', 'name': 'Pump driver over heated log' },
+        { 'value': '10', 'name': 'EEPROM commmunication error log' },
+        { 'value': '11', 'name': 'EEPROM memory data loss error log' }
+      ],
       'HardwareAlarmsLog': [
         { 'value': '1', 'name': 'Bridge error log' },
         { 'value': '2', 'name': 'IO error log' },
@@ -953,24 +1030,29 @@ export class PCMChannelDataService {
         { 'value': '6', 'name': 'PWM short circuit log' },
         { 'value': '7', 'name': 'Swash angle error log' },
         { 'value': '8', 'name': 'Driver error log' },
-        { 'value': '9', 'name': 'Open load errorlog' },
-        { 'value': '10', 'name': 'No swash angle input selected' },
-        { 'value': '11', 'name': 'No swash angle regulator enable selected' },
-        { 'value': '12', 'name': 'No work pressure input selected' },
-        { 'value': '13', 'name': 'No pressure regulator enable selected' },
-        { 'value': '14', 'name': 'Work pressure error to large vs setpoint' },
-        { 'value': '15', 'name': 'Digital input 1 monitor lost' },
-        { 'value': '16', 'name': 'Digital input 2 monitor lost' },
-        { 'value': '17', 'name': 'Digital input 3 monitor lost' },
-        { 'value': '18', 'name': 'Digital input 4 monitor lost' },
-        { 'value': '19', 'name': 'Digital input 5 monitor lost' },
-        { 'value': '20', 'name': 'Digital input 6 monitor lost' },
-        { 'value': '21', 'name': 'Digital input 7 monitor lost' },
-        { 'value': '22', 'name': 'Digital input 8 monitor lost' },
-        { 'value': '23', 'name': 'Digital input 9 monitor lost' },
-        { 'value': '24', 'name': 'Digital input 10 monitor lost' },
-        { 'value': '25', 'name': 'Digital input 11 monitor lost' },
-        { 'value': '26', 'name': 'Digital input 12 monitor lost' }
+        { 'value': '9', 'name': 'Open load error log' },
+        { 'value': '10', 'name': 'No swash angle input selected log' },
+        { 'value': '11', 'name': 'No swash angle regulator enable selected log' },
+        { 'value': '12', 'name': 'No work pressure input selected log' },
+        { 'value': '13', 'name': 'No pressure regulator enable selected log' },
+        { 'value': '14', 'name': 'Work pressure error to large vs setpoint log' },
+        { 'value': '15', 'name': 'Digital input 1 monitor lost log' },
+        { 'value': '16', 'name': 'Digital input 2 monitor lost log' },
+        { 'value': '17', 'name': 'Digital input 3 monitor lost log' },
+        { 'value': '18', 'name': 'Digital input 4 monitor lost log' },
+        { 'value': '19', 'name': 'Digital input 5 monitor lost log' },
+        { 'value': '20', 'name': 'Digital input 6 monitor lost log' },
+        { 'value': '21', 'name': 'Digital input 7 monitor lost log' },
+        { 'value': '22', 'name': 'Digital input 8 monitor lost log' },
+        { 'value': '23', 'name': 'Digital input 9 monitor lost log' },
+        { 'value': '24', 'name': 'Digital input 10 monitor lost log' },
+        { 'value': '25', 'name': 'Digital input 11 monitor lost log' },
+        { 'value': '26', 'name': 'Digital input 12 monitor lost log' },
+        { 'value': '27', 'name': 'Pump power too low log' },
+        { 'value': '28', 'name': 'I/O power too low log' },
+        { 'value': '29', 'name': 'Control power too log' },
+        { 'value': '30', 'name': 'Control power high log' },
+        { 'value': '31', 'name': 'MCU temperature too high log' }
 
       ],
       'WarningsLog': [
@@ -980,8 +1062,8 @@ export class PCMChannelDataService {
         { 'value': '4', 'name': 'Analog 4 min warn log' },
         { 'value': '5', 'name': 'Analog 5 min warn log' },
         { 'value': '6', 'name': 'Analog 6 min warn log' },
-        { 'value': '7', 'name': 'Undefined' },
-        { 'value': '8', 'name': 'Undefined' },
+        { 'value': '7', 'name': 'No configuration found in memory log' },
+        { 'value': '8', 'name': 'Passwprd has not been changed from factory setting log' },
         { 'value': '9', 'name': 'Analog 1 max warn log' },
         { 'value': '10', 'name': 'Analog 2 max warn log' },
         { 'value': '11', 'name': 'Analog 3 max warn log' },
@@ -990,49 +1072,82 @@ export class PCMChannelDataService {
         { 'value': '14', 'name': 'Analog 6 max warn log' },
         { 'value': '15', 'name': 'Undefined' },
         { 'value': '16', 'name': 'Undefined' },
-        { 'value': '17', 'name': 'Digital warn log 1' },
-        { 'value': '18', 'name': 'Digital warn log 2' },
-        { 'value': '19', 'name': 'Digital warn log 3' },
-        { 'value': '20', 'name': 'Digital warn log 4' },
-        { 'value': '21', 'name': 'Digital warn log 5' },
-        { 'value': '22', 'name': 'Digital warn log 6' },
-        { 'value': '23', 'name': 'Digital warn log 7' },
-        { 'value': '24', 'name': 'Digital warn log 8' },
-        { 'value': '25', 'name': 'Digital warn log 9' },
-        { 'value': '26', 'name': 'Digital warn log 10' },
-        { 'value': '27', 'name': 'Digital warn log 11' },
-        { 'value': '28', 'name': 'Digital warn log 12' },
-        { 'value': '29', 'name': 'Undefined' },
-        { 'value': '30', 'name': 'Undefined' },
-        { 'value': '31', 'name': 'Undefined' },
-        { 'value': '32', 'name': 'Undefined' },
+        { 'value': '17', 'name': 'Digital warn 1 log' },
+        { 'value': '18', 'name': 'Digital warn 2 log' },
+        { 'value': '19', 'name': 'Digital warn 3 log' },
+        { 'value': '20', 'name': 'Digital warn 4 log' },
+        { 'value': '21', 'name': 'Digital warn 5 log' },
+        { 'value': '22', 'name': 'Digital warn 6 log' },
+        { 'value': '23', 'name': 'Digital warn 7 log' },
+        { 'value': '24', 'name': 'Digital warn 8 log' },
+        { 'value': '25', 'name': 'Digital warn 9 log' },
+        { 'value': '26', 'name': 'Digital warn 10 log' },
+        { 'value': '27', 'name': 'Digital warn 11 log' },
+        { 'value': '28', 'name': 'Digital warn 12 log' },
+        { 'value': '29', 'name': 'Swash angle input has a bad signal level log' },
+        { 'value': '30', 'name': 'Error too high for swash angle regulation log' },
+        { 'value': '31', 'name': 'Work pressure input has a bad signal level log' },
+        { 'value': '32', 'name': 'Error too high for pressure regulation log' },
+      ],
+      'WarningsExtendedLog': [
+        { 'value': '1', 'name': 'AI Analog input 1 bad signal level warning log' },
+        { 'value': '2', 'name': 'AI Analog input 2 bad signal level warning log' },
+        { 'value': '3', 'name': 'X1 Analog input 3 bad signal level warning log' },
+        { 'value': '4', 'name': 'X2 Analog input 4 bad signal level warning log' },
+        { 'value': '5', 'name': 'X3 Analog input 5 bad signal level warning log' },
+        { 'value': '6', 'name': 'X4 Analog input 6 bad signal level warning log' },
+        { 'value': '7', 'name': 'PT100 bad signal level warning log' },
+        { 'value': '8', 'name': 'Al over current on +24V out log' },
+        { 'value': '9', 'name': 'X1 over current on +24V out log' },
+        { 'value': '10', 'name': 'X2 over current on +24V out log' },
+        { 'value': '11', 'name': 'X3 over current on +24V out log' },
+        { 'value': '12', 'name': 'X4 over current on +24V out log ' },
+        { 'value': '13', 'name': 'DI over current on +24V out log' },
+        { 'value': '14', 'name': 'Digital output driver overheat warning log' },
+        { 'value': '15', 'name': 'DI digital output 1 over current warning log' },
+        { 'value': '16', 'name': 'DI digital output 2 over current warning log' },
+        { 'value': '17', 'name': 'DI digital output 3 over current warning log' },
+        { 'value': '18', 'name': 'DI digital output 4 over current warning log' },
+        { 'value': '19', 'name': 'DO digital output 5 over current warning log' },
+        { 'value': '20', 'name': 'DO digital output 6 over current warning log' },
+        { 'value': '21', 'name': 'DO digital output 7 over current warning log' },
+        { 'value': '22', 'name': 'DO digital output 8 over current warning log' },
+        { 'value': '23', 'name': 'Pump voltage in too high warning log' },
+        { 'value': '24', 'name': 'Pump voltage in too low warning log' },
+        { 'value': '25', 'name': 'I/O voltage in too high warning log' },
+        { 'value': '26', 'name': 'I/O voltage in too low warning log' },
+        { 'value': '27', 'name': 'Control voltage in too high warning log' },
+        { 'value': '28', 'name': 'Control voltage in too low warning log' },
+        { 'value': '29', 'name': 'Pump driver temperature too high warning log' },
+        { 'value': '30', 'name': 'I/O driver temperature too high warning log' },
+        { 'value': '31', 'name': 'Control temperature too high warning log' }
       ],
       'TempWarningsLog': [
-        { 'value': '1', 'name': 'Analog 1 min warn temp  log' },
-        { 'value': '2', 'name': 'Analog 2 min warn temp  log' },
-        { 'value': '3', 'name': 'Analog 3 min warn temp  log' },
-        { 'value': '4', 'name': 'Analog 4 min warn temp  log' },
-        { 'value': '5', 'name': 'Analog 5 min warn temp  log' },
-        { 'value': '6', 'name': 'Analog 6 min warn temp  log' },
+        { 'value': '1', 'name': 'Analog 1 min warn temp log' },
+        { 'value': '2', 'name': 'Analog 2 min warn temp log' },
+        { 'value': '3', 'name': 'Analog 3 min warn temp log' },
+        { 'value': '4', 'name': 'Analog 4 min warn temp log' },
+        { 'value': '5', 'name': 'Analog 5 min warn temp log' },
+        { 'value': '6', 'name': 'Analog 6 min warn temp log' },
         { 'value': '7', 'name': 'Undefined' },
         { 'value': '8', 'name': 'Undefined' },
-        { 'value': '9', 'name': 'Analog 1 max warn temp  log' },
-        { 'value': '10', 'name': 'Analog 2 max warn temp  log' },
-        { 'value': '11', 'name': 'Analog 3 max warn temp  log' },
-        { 'value': '12', 'name': 'Analog 4 max warn temp  log' },
-        { 'value': '13', 'name': 'Analog 5 max warn temp  log' },
-        { 'value': '14', 'name': 'Analog 6 max warn temp  log' },
+        { 'value': '9', 'name': 'Analog 1 max warn temp log' },
+        { 'value': '10', 'name': 'Analog 2 max warn temp log' },
+        { 'value': '11', 'name': 'Analog 3 max warn temp log' },
+        { 'value': '12', 'name': 'Analog 4 max warn temp log' },
+        { 'value': '13', 'name': 'Analog 5 max warn temp log' },
+        { 'value': '14', 'name': 'Analog 6 max warn temp log' },
         { 'value': '15', 'name': 'Undefined' },
         { 'value': '16', 'name': 'Undefined' },
-        { 'value': '17', 'name': 'Digital warn temp  log 1' },
-        { 'value': '18', 'name': 'Digital warn temp  log 2' },
-        { 'value': '19', 'name': 'Digital warn temp  log 3' },
-        { 'value': '20', 'name': 'Digital warn temp  log 4' },
-        { 'value': '21', 'name': 'Digital warn temp  log 5' },
-        { 'value': '22', 'name': 'Digital warn temp  log 6' },
-        { 'value': '23', 'name': 'Digital warn temp  log 7' },
-        { 'value': '24', 'name': 'Digital warn temp  log 8' },
-        { 'value': '26', 'name': 'Digital warn temp  log10' },
+        { 'value': '17', 'name': 'Digital warn temp log 1' },
+        { 'value': '18', 'name': 'Digital warn temp log 2' },
+        { 'value': '19', 'name': 'Digital warn temp log 3' },
+        { 'value': '20', 'name': 'Digital warn temp log 4' },
+        { 'value': '21', 'name': 'Digital warn temp log 5' },
+        { 'value': '22', 'name': 'Digital warn temp log 6' },
+        { 'value': '23', 'name': 'Digital warn temp log 7' },
+        { 'value': '24', 'name': 'Digital warn temp log 8' },
+        { 'value': '26', 'name': 'Digital warn temp log 10' },
         { 'value': '27', 'name': 'Digital warn temp log 11' },
         { 'value': '28', 'name': 'Digital warn temp log 12' },
         { 'value': '29', 'name': 'Undefined' },
@@ -1043,22 +1158,40 @@ export class PCMChannelDataService {
     }
     if (alarmType == Constants.values.Alarms) {
       return alarmsListMap.Alarms;
-    } else if (alarmType == Constants.values.HardwareAlarms) {
+    } 
+    else if (alarmType == Constants.values.HardwareAlarms) {
       return alarmsListMap.HardwareAlarms;
-    } else if (alarmType == Constants.values.Warnings) {
+    } 
+    else if (alarmType == Constants.values.Warnings) {
       return alarmsListMap.Warnings;
-    } else if (alarmType == Constants.values.TempWarnings) {
+    } 
+    else if (alarmType == Constants.values.TempWarnings) {
       return alarmsListMap.TempWarnings;
-    } else if (alarmType == Constants.values.AlarmsLog) {
+    } 
+    else if (alarmType == Constants.values.AlarmsLog) {
       return alarmsListMap.AlarmsLog;
-    } else if (alarmType == Constants.values.HardwareAlarmsLog) {
+    } 
+    else if (alarmType == Constants.values.HardwareAlarmsLog) {
       return alarmsListMap.HardwareAlarmsLog;
-    } else if (alarmType == Constants.values.WarningsLog) {
+    } 
+    else if (alarmType == Constants.values.WarningsLog) {
       return alarmsListMap.WarningsLog;
-    } else if (alarmType == Constants.values.TempWarningsLog) {
+    } 
+    else if (alarmType == Constants.values.TempWarningsLog) {
       return alarmsListMap.TempWarningsLog;
+    } 
+    else if (alarmType == Constants.values.AlarmsExtended) {
+      return alarmsListMap.AlarmsExtended;
     }
-
+    else if(alarmType == Constants.values.AlarmsExtendedLog) {
+      return alarmsListMap.AlarmsLogExtended;
+    }
+    else if (alarmType == Constants.values.WarningsExtended){
+      return alarmsListMap.WarningsExtended;
+    }
+    else if(alarmType == Constants.values.WarningsExtendedLog){
+      return alarmsListMap.WarningsExtendedLog;
+    }
   }
 
   licensePageItems = {

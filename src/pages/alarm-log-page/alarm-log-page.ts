@@ -32,13 +32,19 @@ export class AlarmLogPage {
   countAtmQList: number = 0;
 
   warningMessageList = [];
+  warningExtendedMessageList = [];
   tempWarningMessageList = [];
   alarmsMessageList = [];
+  alarmsExtendedMessageList = [];
   hardwareAlarmsMessageList = [];
   warningMessageLogList = [];
+  warningExtendedMessageLogList = [];
   tempWarningMessageLogList = [];
   alarmsMessageLogList = [];
+  alarmsExtendedMessageLogList = [];
   hardwareAlarmsMessageLogList = [];
+  headerLabel = "Alarms";
+  intervalId;
 
 
   writeData: string;
@@ -64,12 +70,31 @@ export class AlarmLogPage {
 
   }
 
+  /**
+   * 
+   * @event ionViewWillLeave - Event triggered when the page is about to leave to next page.  
+  */
+  ionViewWillLeave() {
+    clearInterval(this.intervalId);
+  }
+
+
   /**  
   * @event ionViewDidEnter  
   */
   ionViewDidEnter() {
+    this.atmQuestionObjectList = [];
     this.initializeStartNotify();
+
     this.readAlarmsandWarnings();
+    this.startReadWithInterval();
+
+    // setTimeout(() => {
+    //   this.readAlarmsandWarnings();
+    // },300);
+    // setTimeout(() => {
+    //   this.readAlarmsandWarnings();
+    // },200);
 
     // this.hardwareAlarmsMessageList.push("dfshfsd dsfhsdj fasjkd sefjsdjfk shk dfsh sfsdf sd fsdhff");
     // this.alarmsMessageList.push("fsadhfsdj ");
@@ -86,10 +111,40 @@ export class AlarmLogPage {
     this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
   }
 
+  startReadWithInterval(count:number = 0){
+    count = Math.abs(count);
+    let infinite = count == 0 ? true : false;
+
+    this.intervalId = setInterval(()=> {
+      count--;
+      if(count == 0 && !infinite)
+        clearInterval(this.intervalId);
+      this.readAlarmsandWarnings();
+    }, 8000);
+  }
+
   /** 
   * This is used to read the regulator setup paraemtrs from the device.  
   */
-  readAlarmsandWarnings() {
+  async readAlarmsandWarnings() {
+    this.hardwareAlarmsMessageList = [];
+    this.hardwareAlarmsMessageLogList = [];
+
+    this.alarmsMessageList = [];
+    this.alarmsMessageLogList = [];
+
+    this.alarmsExtendedMessageList = [];
+    this.alarmsExtendedMessageLogList = [];
+
+    this.warningMessageList = [];
+    this.warningMessageLogList = [];
+
+    this.tempWarningMessageList = [];
+    this.tempWarningMessageLogList = [];
+
+    this.warningExtendedMessageList = [];
+    this.warningExtendedMessageLogList = [];
+
     console.log("readAlarmsandWarnings called");
     this.operation = Constants.values.read;
     this.atmQuestionObjectList = [];
@@ -97,14 +152,19 @@ export class AlarmLogPage {
 
     var alarmAndWarnInputList = PCMChannelDataService.getAlarmAndWarnInputDetails();
     if (alarmAndWarnInputList != null) {
-      alarmAndWarnInputList.forEach(element => {
+
+      for(let element of alarmAndWarnInputList){
         var byteArray = new Uint8Array([element.rType, 0, element.channel, element.subchannel, 0, 0]);
         this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
-      });
+        await this.sleep(10);
+      }
+      // alarmAndWarnInputList.forEach(element => {
+      //   var byteArray = new Uint8Array([element.rType, 0, element.channel, element.subchannel, 0, 0]);
+      //   this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
+      // });
     } else {
       console.log(Constants.messages.alarmAndWarnInputListnull);
     }
-
   }
 
   /** 
@@ -119,6 +179,7 @@ export class AlarmLogPage {
       this.countAtmQList++;
       if (this.operation == Constants.values.read && this.countAtmQList > 7) {
         this.setParameterValuesToUI();
+        console.log("just keeps going....");
         //this.setItemValuesToUI();
       } else if (this.operation == Constants.values.authenticate) {
         console.log("startNotify authenticate")
@@ -158,7 +219,7 @@ export class AlarmLogPage {
         if (element.value32Bit1 != 0) {
           valueList = this.decipher32bitToGetValuesList(element.value32Bit1);
         }
-        if (valueList != null) {
+        if (valueList != null && valueList.length > 0) {
           if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.alarmsSubchannel) {
             this.alarmsMessageList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.Alarms);
           } if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.hardwareAlarmsSubchannel) {
@@ -176,6 +237,21 @@ export class AlarmLogPage {
           } if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.tempWarningsLogSubchannel) {
             this.tempWarningMessageLogList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.TempWarningsLog);
           }
+
+          if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.alarmsExtendedSubchannel) {
+            this.alarmsExtendedMessageList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.AlarmsExtended);
+          }
+          if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.alarmsExtendedLogSubchannel) {
+            this.alarmsExtendedMessageLogList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.AlarmsExtendedLog);
+          }
+          if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.warningsExtendedSubchannel) {
+            this.warningExtendedMessageList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.WarningsExtended);
+          }
+          if (element.channel == Constants.channels.alarmCommunucationChannel && element.subChannel == Constants.channels.warningsExtendedLogSubchannel) {
+            this.warningExtendedMessageLogList = this.constructAlarmsandLogListAndShowInUI(valueList, Constants.values.WarningsExtendedLog);
+          }
+
+
 
           if (this.pcmchanneldataservice.passwordFlag) {
             this.writeData = Constants.messages.clearLog;
@@ -238,12 +314,13 @@ export class AlarmLogPage {
   * This is used to construct text with Error number and name 
   */
   constructMessageText(element, type, messageName) {
-    // constructing the mesage with number  Hardware alarms-: give the number received / For alarms :- add the number with 32     
+    // constructing the message with number  Hardware alarms-: give the number received / For alarms :- add the number with 32  / For extended add the number with 64 
     let alarmLogMessage;
     let errorNumberString = element;
     let alarmChar;
 
-    if (type == Constants.values.Alarms || type == Constants.values.AlarmsLog || type == Constants.values.HardwareAlarms || type == Constants.values.HardwareAlarmsLog) {
+    if (type == Constants.values.Alarms || type == Constants.values.AlarmsLog || type == Constants.values.HardwareAlarms || type == Constants.values.HardwareAlarmsLog 
+      || type == Constants.values.AlarmsExtended || type == Constants.values.AlarmsExtendedLog) {
       alarmChar = Constants.values.E;
     } else {
       alarmChar = Constants.values.W;
@@ -251,7 +328,11 @@ export class AlarmLogPage {
 
     if (type == Constants.values.Alarms || type == Constants.values.AlarmsLog || type == Constants.values.TempWarnings || type == Constants.values.TempWarningsLog) {
       alarmLogMessage = alarmChar + (32 + element) + " " + messageName;
-    } else {
+    } 
+    else if(type == Constants.values.AlarmsExtended || type == Constants.values.AlarmsExtendedLog || type == Constants.values.WarningsExtended || type == Constants.values.WarningsExtendedLog){
+      alarmLogMessage = alarmChar + (64 + element) + " " + messageName;
+    }
+    else {
       if (element < 10) {
         errorNumberString = "0" + element;
       }
@@ -297,16 +378,17 @@ export class AlarmLogPage {
       }).catch(error => {
         console.log(JSON.stringify(error));
       });
+    }
+
+    stopReadDeviceParameters() {
+      clearInterval(this.intervalId);
   }
-
-
-
-
 
   /** 
 * This is used to navigate to DriveLogPage
 */
   navigateToDriveLog() {
+    this.stopReadDeviceParameters();
     this.navCtrl.push(DriveLogPage);
   }
 
@@ -314,6 +396,7 @@ export class AlarmLogPage {
 * This is used to navigate to DriveLogPage
 */
   navigateToLiveGraph() {
+    this.stopReadDeviceParameters();
     this.navCtrl.push("LiveGraphPage", { deviceObject: this.deviceObject });
   }
 
@@ -321,6 +404,7 @@ export class AlarmLogPage {
    * This is used for going back to the previous page
    */
   back() {
+    this.stopReadDeviceParameters();
     this.navCtrl.pop();
   }
 
@@ -350,6 +434,18 @@ export class AlarmLogPage {
 
       if (this.tempWarningMessageList != null) {
         if (this.tempWarningMessageList.length > 0) {
+          flag = 1;
+        }
+      }
+
+      if (this.alarmsExtendedMessageList != null) {
+        if (this.alarmsExtendedMessageList.length > 0) {
+          flag = 1;
+        }
+      }
+
+      if (this.warningExtendedMessageList != null) {
+        if (this.warningExtendedMessageList.length > 0) {
           flag = 1;
         }
       }
@@ -392,6 +488,19 @@ export class AlarmLogPage {
         }
       }
 
+      
+      if (this.alarmsExtendedMessageLogList != null) {
+        if (this.alarmsExtendedMessageLogList.length > 0) {
+          flag = 1;
+        }
+      }
+
+      if (this.warningExtendedMessageLogList != null) {
+        if (this.warningExtendedMessageLogList.length > 0) {
+          flag = 1;
+        }
+      }
+
       if (flag == 1) {
         return true;
       } else {
@@ -403,7 +512,7 @@ export class AlarmLogPage {
   /** 
   * This is used to Clear Logs
   */
-  clearLogs() {
+  async clearLogs() {
     // to clear logs
     if (this.pcmchanneldataservice.passwordFlag) {
       console.log("readAlarmsandWarnings called");
@@ -415,16 +524,27 @@ export class AlarmLogPage {
 
       var logInputList = PCMChannelDataService.getLogInputDetails();
       if (logInputList != null) {
-        logInputList.forEach(element => {
-          var byteArray = new Uint8Array([element.wType, 0, element.channel, element.subchannel, 0, 0]);
+
+        for(let element of logInputList){
+          var byteArray = new Uint8Array([element.wType, 0, element.channel, element.subchannel,0,0]);
           this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
-        });
+
+          await this.sleep(10);
+        }
+        // logInputList.forEach(element => {
+        //   var byteArray = new Uint8Array([element.wType, 0, element.channel, element.subchannel, 0, 0]);
+        //   this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
+        // });
       } else {
         console.log(Constants.messages.logInputListnull);
       }
 
       this.readAlarmsandWarnings();
     } else this.enterPaswordPrompt();
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /**

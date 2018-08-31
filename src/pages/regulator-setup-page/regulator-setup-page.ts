@@ -19,8 +19,7 @@ import { LiveTunePage } from './../live-tune-page/live-tune-page';
   templateUrl: 'regulator-setup-page.html',
 })
 export class RegulatorSetupPage {
-
-
+  headerLabel = "Regulator Setup";
   regulatorType;
   feedForward = 0;
   propotionalReg;

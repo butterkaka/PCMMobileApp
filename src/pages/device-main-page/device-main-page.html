@@ -26,25 +26,23 @@
 </ion-header> -->
 
 <ion-header>
-    <ion-navbar hideBackButton="true">
+    <ion-navbar hideBackButton="true" class="header-nav-style">
         <ion-grid no-padding>
             <ion-row no-padding class="align-center">
                 <ion-col no-padding col-auto>
                     <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
                         <ion-icon large name="ios-arrow-round-back-outline" (tap)="back()"></ion-icon>
                     </button>
-
                 </ion-col>
                 <ion-col class="align-center">
                     <div no-margin>
-                        <h5 no-margin> Main page
+                        <h5 no-margin>
+                            {{headerLabel}}
                         </h5>
                     </div>
-
                 </ion-col>
-                <button ion-buttons small class="icon settings-style ion-navicon" start>
-                    <ion-icon large name="ios-settings-outline" (tap)=" navigateToSettings()"></ion-icon>
-                    <!-- <ion-icon large name="bluetooth" color=danger  (tap)=" navigateToSettings()" ></ion-icon> -->
+                <button ion-buttons no-padding class="icon button-custom-inverted small">
+                    <ion-icon *ngIf="true" name="settings" (tap)="navigateToSettings()"></ion-icon>
                 </button>
             </ion-row>
         </ion-grid>
@@ -57,9 +55,14 @@
     <ion-card padding>
         <ion-card-header no-padding>
             <ion-item no-padding>
-                <h1><strong>{{deviceName}}</strong>
-                </h1>
-                <span><small>Firmware version:{{firmwareVersion}}</small></span>
+                <span item-left>
+                    <h1><strong>{{deviceName}}</strong>
+                    </h1>
+                    <span><small>Firmware version:{{firmwareVersion}}</small></span>
+                </span>
+                <span item-right>
+                    <button item-right no-margin small ion-button (tap)="blinkToggle()"> <label>{{blinkToggleName}}</label></button>
+                </span>
             </ion-item>
         </ion-card-header>
         <!-- <ion-item no-padding>
@@ -95,20 +98,19 @@
         <!-- </ion-col>
             <ion-col col-6> -->
         <button ion-button block (tap)="navigateToAlarmLog()">Log</button>
-        <button ion-button block (tap)="back()">Disconnect</button>
+        <button ion-button block (tap)="navigateToLiveGraph()">Live graph</button>
+        
         <!-- </ion-col>
         </ion-row> -->
 
 
         <!-- <button ion-button block (tap)=" navigateToSettings()">App settings</button> -->
     </div>
-
-
 </ion-content>
 
 <ion-footer no-padding>
     <div>
-        <button full ion-button (tap)="blinkToggle()"> <label>{{blinkToggleName}}</label></button>
+        <button ion-button full (tap)="back()">Disconnect</button>
     </div>
 </ion-footer>
 

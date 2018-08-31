@@ -20,7 +20,6 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
   templateUrl: 'connector-parameter-setup.html',
 })
 export class ConnectorParameterSetupPage {
-
   connector;
   connectorValObj;
   functionInput = 0;
@@ -139,7 +138,6 @@ export class ConnectorParameterSetupPage {
   ionViewDidEnter() {
     console.log('ionViewDidEnter SettingsPage');
 
-
     if (this.connectorValObj.pinValue.indexOf("PT100") != -1) {
       this.pinValueHeader = "PT100";
     } else {
@@ -151,15 +149,16 @@ export class ConnectorParameterSetupPage {
     this.GetConnectorDropDownList();
     this.setParamterChannel();
     //console.log(this.connectorPinType);
+    
     this.initializeStartNotify();
     this.readParameterValuesFromPCM();
     this.functionInputChange();
-
-    this.addGraph();
-    this.startGraphUpdate();
+    setTimeout(()=> {
+      this.startGraphUpdate();
+      this.addGraph();
+    }, 100);
 
     this.SetTimeoutForViewUpdate();
-
   }
 
   /**
@@ -365,6 +364,13 @@ export class ConnectorParameterSetupPage {
         var byteArray = new Uint8Array([element.rType, 0, element.channel, element.subchannel, 0, 0]);
         this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
       });
+
+      // for(let element of connectorParamterSetupValuesList){
+      //   var byteArray = new Uint8Array([element.rType, 0, element.channel, element.subchannel, 0, 0]);
+      //   this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
+      //   await this.sleep(50);
+      // }
+
     }
     else {
       console.log(Constants.messages.connectorParamterSetupValuesListnull);
@@ -373,6 +379,10 @@ export class ConnectorParameterSetupPage {
     //   var byteArray = new Uint8Array([Constants.values.rType, 0, this.channel, Constants.channels.invertedSubchannel, 0, 0]);
     //   this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
     // }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   /** 
@@ -590,7 +600,8 @@ export class ConnectorParameterSetupPage {
       this.atmQuestionObjectList.push(new AtmQuestionTypeModel(new Uint8Array(buffer)));
       this.countAtmQList++;
       if (this.operation == Constants.values.read) {
-        if (this.countAtmQList > 7 && !this.isDigitalIOSelected()) {
+        //if (this.countAtmQList > 7 && !this.isDigitalIOSelected()) {
+        if (this.countAtmQList >= 6 && !this.isDigitalIOSelected()) {
           this.setParameterValuesToUI();
           this.setItemValuesToUI();
           this.sensorUnitCheck();
@@ -776,6 +787,7 @@ export class ConnectorParameterSetupPage {
 
         // write selected function input
         value32 = this.functionInput;
+
         val4 = (value32 & 0xff000000) >> 24;
         val3 = (value32 & 0x00ff0000) >> 16;
         val2 = (value32 & 0x0000ff00) >> 8;

@@ -14,18 +14,23 @@ import { Http } from '@angular/http';
   templateUrl: 'license.html',
 })
 export class LicensePage {
+  headerLabel = "License Page";
 
   information: any[];
+  //information = [];
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public pcmChannelDataService: PCMChannelDataService, private http: Http) {
-    let localData = http.get('assets/licensePageInfo.json').map(res => res.json().items);
-    localData.subscribe(data => {
-      this.information = data;
-    })
+    // let localData = http.get('assets/licensePageInfo.json').map(res => res.json().items);
+    // localData.subscribe(data => {
+    //   this.information = data;
+    // });
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LicensePage');
+
+    //test 20180711
+    this.information = this.pcmChannelDataService.licensePageItems.items;
 
   }
 

@@ -49,7 +49,7 @@ export class LiveTunePage {
     this.graphItems = JSON.parse(JSON.stringify(pcmchanneldataservice.liveTuneItems));
   }
 
-
+  headerLabel = "Live tune";
   myLineChart;
 
   // label: "tooltip label test",
@@ -262,7 +262,7 @@ export class LiveTunePage {
       this.addData();
       // //console.log('started')
     },
-      150);
+      500);
 
   }
 

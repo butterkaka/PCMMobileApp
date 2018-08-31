@@ -1,7 +1,6 @@
-
 import { ScanDevicePage } from './../pages/scan-device-page/scan-device-page';
 import { Component } from '@angular/core';
-import { Platform, App, AlertController } from 'ionic-angular';
+import { Nav, Platform, App, AlertController} from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { PCMChannelDataService } from '../providers/pcm-channel-data-service'
@@ -15,11 +14,9 @@ import { Constants } from "../shared/app.constant";
   templateUrl: 'app.html'
 })
 export class MyApp {
-
   //rootPage:any = HomePage;
   //@ViewChild('myNav') nav:NavController
   rootPage: any = ScanDevicePage;
-  //rootPage:any = IOSetupPage;  
   // rootPage:any = PumpSetupPage;
   // rootPage:any = "ConnectorSetupPage";  
   // rootpage:any= AlarmLogPage;
@@ -42,7 +39,8 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       statusBar.styleDefault();
 
-      this.hideSplashScreen();
+      //this.hideSplashScreen();
+      splashScreen.hide();
       //this.initializeApp();
 
       this.app.getActiveNav().setRoot(ScanDevicePage);
@@ -51,18 +49,30 @@ export class MyApp {
         console.log('[INFO] App paused');
         if (!(this.app.getActiveNav().getActive().instance instanceof ScanDevicePage) ) {
           if(this.pcmChannelDataservice.appResetFlag)
-          {this.idle.stop();
-          this.app.getActiveNav().popToRoot();
-          this.disconnectBle();}
+          {
+            this.idle.stop(); 
+            // uncomment this to go to scan-page when returning from pause
+            this.app.getActiveNav().popToRoot();
+          }
         }
       });
 
       platform.resume.subscribe(() => {
         console.log('[INFO] App resumed');
+        this.ble.isConnected(this.pcmChannelDataservice.deviceIdGlobal)
+        .then(
+          () => { 
+            console.log("connected in resume");
+            this.ble.disconnect(pcmchannelservice.deviceIdGlobal).then(() => {
+              console.log("disconnecting...... from " + pcmchannelservice.deviceIdGlobal);
+            });
+          },
+          () => { console.log("disconnected in resume")}
+        );
         this.pcmChannelDataservice.appResetFlag=true;
       });
 
-      this.idle.setIdle(5);
+      this.idle.setIdle(8);
       this.idle.setTimeout(15*60); //15 minutes timeout
       this.idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
@@ -71,7 +81,7 @@ export class MyApp {
       );
       this.idle.onTimeout.subscribe(() => {
         console.log('Timed out!');
-        this.disconnectBle();
+        //this.disconnectBle();
         this.app.getActiveNav().popToRoot();
 
       });
@@ -120,14 +130,6 @@ export class MyApp {
         //     }
       });
 
-
-
-
-
-
-
-
-
     });
 
 
@@ -140,6 +142,8 @@ export class MyApp {
       }, 100);
     }
   }
+
+
   // private setRoot(newRootPage: any) {
   //   this.rootPage = newRootPage;
   // }

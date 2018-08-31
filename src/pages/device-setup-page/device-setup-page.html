@@ -26,7 +26,7 @@
 </ion-header> -->
 
 
-<ion-header>
+<!-- <ion-header>
     <ion-navbar hideBackButton="true">
         <ion-grid no-padding>
             <ion-row no-padding class="align-center">
@@ -45,12 +45,35 @@
                 </ion-col>
                 <button ion-buttons small class="icon settings-style ion-navicon" start>
                     <ion-icon large name="ios-settings-outline" (tap)=" navigateToSettings()"></ion-icon>
-                    <!-- <ion-icon large name="bluetooth" color=danger  (tap)=" navigateToSettings()" ></ion-icon> -->
                 </button>
             </ion-row>
         </ion-grid>
     </ion-navbar>
-</ion-header>
+</ion-header> -->
+
+<ion-header>
+        <ion-navbar hideBackButton="true" class="header-nav-style">
+            <ion-grid no-padding>
+                <ion-row no-padding class="align-center">
+                    <ion-col no-padding col-auto>
+                        <button ion-buttons no-padding class="icon button-custom ion-navicon" start>
+                            <ion-icon large name="ios-arrow-round-back-outline" (tap)="back()"></ion-icon>
+                        </button>
+                    </ion-col>
+                    <ion-col class="align-center">
+                        <div no-margin>
+                            <h5 no-margin>
+                                {{headerLabel}}
+                            </h5>
+                        </div>
+                    </ion-col>
+                    <button ion-buttons no-padding class="icon button-custom-inverted small">
+                        <ion-icon *ngIf="true" name="settings" (tap)="navigateToSettings()"></ion-icon>
+                    </button>
+                </ion-row>
+            </ion-grid>
+        </ion-navbar>
+    </ion-header>
 
 <ion-content overflow-scroll="false">
     <ion-card padding>
@@ -59,7 +82,7 @@
         </ion-card-header>
         <hr size="4px" />
         <div>
-            <button ion-button padding block (tap)="navigateToIOSetup()">I/O overview</button>
+            <button ion-button padding block (tap)="navigateToIOSetup()">I/O setup</button>
             <button ion-button padding block (tap)="launchRampSetupPage()">Ramp setup</button>
             <button ion-button padding block (tap)="launchPumpSetupPage()">Pump setup</button>
             <button ion-button padding block (tap)="launchSwashAngleSetupPage()">Swash angle setup</button>
@@ -67,6 +90,25 @@
 
         </div>
     </ion-card>
+
+    <!-- <ion-card padding *ngIf="showOrHideConnectorSetupList()"> -->
+    <ion-card padding>
+        <ion-card-header no-padding>
+            <strong>Assigned connectors: {{ connectorUIList.length }} </strong>
+            <ion-icon style="float: right;" (click)="readConnectorParameter()" name="refresh">
+            </ion-icon>
+        </ion-card-header>
+        <!-- <hr size="4px" />
+        <button ion-button padding block (tap)="readConnectorParameter()">Refresh list</button> -->
+        <hr size="4px" />
+        <ion-list>
+            <button ion-item *ngFor="let item of connectorUIList" (click)="navigateToConnectorParameterPage(item)">
+                <!--{{ item.pid }} {{ item.connectorname }} channel:{{ item.channel }} value: {{ item.value }}-->
+                <strong>{{ item.connector }}</strong> {{ item.pinNum }} - {{ item.pinValue }} - {{ item.setupDetail }}
+            </button>   
+        </ion-list>
+    </ion-card>
+    
     <ion-card padding class="card-margin">
         <ion-card-header no-padding>
             <strong>Others:</strong>

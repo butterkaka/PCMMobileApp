@@ -17,7 +17,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
   templateUrl: 'pump-setup-page.html',
 })
 export class PumpSetupPage {
-
+  headerLabel = "Pump setup";
   forwardMinCurrent = 0;
   forwardMaxCurrent = 0;
   reverseMinCurrent = 0;
@@ -71,8 +71,13 @@ export class PumpSetupPage {
 
   ionViewDidEnter() {
     this.disabled = false;
-    this.readPumpSetupParameters();
-    this.setTimeoutForViewUpdate();
+    setTimeout(() => {
+      this.readPumpSetupParameters();
+    },300);
+    setTimeout(() => {
+      this.readPumpSetupParameters();
+    },200);
+    //this.setTimeoutForViewUpdate();
   }
 
   /** 
@@ -180,6 +185,7 @@ export class PumpSetupPage {
           val1 = (value32 & 0x000000ff);
 
           var byteArray = new Uint8Array([element.wType, 0, element.channel, element.subchannel, val1, val2, val3, val4]);
+          console.log("pump setup byteArray value: " + val1 + ";"+ val2 + ";"+ val3 + ";"+ val4);
           this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
         }
       });

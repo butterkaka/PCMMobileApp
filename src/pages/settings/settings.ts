@@ -20,7 +20,7 @@ import { BLE } from '@ionic-native/ble';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-
+  headerLabel = "App settings";
   temperature = "1";
   pressure = "3";
   rotationalSpeed = "6";
@@ -426,11 +426,15 @@ export class SettingsPage {
     let val2;
     let val3;
     let val4;
+    
     val4 = (newNumber & 0xff000000) >> 24;
     val3 = (newNumber & 0x00ff0000) >> 16;
     val2 = (newNumber & 0x0000ff00) >> 8;
     val1 = (newNumber & 0x000000ff);
     var byteArray = new Uint8Array([wType, 0, channel, subChannel, val1, val2, val3, val4]);
+
+    console.log("change number byteArray value: " + val1 + ";"+ val2 + ";"+ val3 + ";"+ val4);
+
     this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
   }
 

@@ -68,6 +68,7 @@ export class LiveGraphPage {
 
   analogMinInput;
   analogMaxInput;
+  headerLabel = "Live graph";
 
   /**
      * LiveGraphPage Constructor.
@@ -345,6 +346,7 @@ export class LiveGraphPage {
       }else{
         this.liveGraphSetupDetails.channel =  this.liveGraphSetupDetails.powerchannel;
       }
+      this.currentToggleFlag = true;
     }
 
     byteArray = new Uint8Array([this.liveGraphSetupDetails.rType, 0, this.liveGraphSetupDetails.channel, this.liveGraphSetupDetails.subchannel, 0, 0]);
@@ -453,7 +455,6 @@ export class LiveGraphPage {
       if (this.toggleValue == Constants.messages.switchToCurrent)
         this.toggleValue = Constants.messages.switchToVal
     }
-
 
     this.currentToggleFlag = false;
     this.storage.set('liveGraphType', this.liveGraphType);

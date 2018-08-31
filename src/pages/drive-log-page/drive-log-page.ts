@@ -13,7 +13,7 @@ import { NavController, NavParams } from 'ionic-angular';
   templateUrl: 'drive-log-page.html',
 })
 export class DriveLogPage {
-
+  headerLabel = "Drive log";
 
 
   chartOptions: any = {
