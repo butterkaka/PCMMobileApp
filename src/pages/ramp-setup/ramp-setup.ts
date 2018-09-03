@@ -5,6 +5,8 @@ import { DeviceModel, AtmQuestionTypeModel } from '../../Models/ExportModelClass
 import { BLE } from '@ionic-native/ble';
 import { PCMChannelDataService } from '../../providers/pcm-channel-data-service';
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
+
+import { UtilsService } from './../../shared/utilsService';
 /**
  * Generated class for the RampSetupPage page.
  *
@@ -15,6 +17,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-ramp-setup',
   templateUrl: 'ramp-setup.html',
+  providers: [UtilsService]
 })
 export class RampSetupPage {
   headerLabel = "Ramp setup";
@@ -50,7 +53,7 @@ export class RampSetupPage {
    * @param pcmchanneldataservice PCMChannelDataService for UI 
    */
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
-    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService) {
+    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService, public utilsService: UtilsService) {
     this.deviceObject = navParams.get("deviceObject");
 
     this.items = JSON.parse(JSON.stringify(pcmchanneldataservice.rampSetupItems));
@@ -62,19 +65,25 @@ export class RampSetupPage {
   * @event ionViewDidLoad PageLoad Event  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log('ionViewDidLoad RampSetup');
 
   }
+
   ionViewDidEnter() {
     this.disabled = false;
     // this.SetParameterValuesToUI();
     // this.setItemValuesToUI();
+
+    
     setTimeout(() => {
       this.readRampSetupParameters();
-    },300);
+    }, 100);
     setTimeout(() => {
       this.readRampSetupParameters();
-    },200);
+    }, 300);
+    this.utilsService.hideLoading();
+
     //this.setTimeoutForViewUpdate();
   }
 

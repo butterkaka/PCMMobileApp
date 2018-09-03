@@ -46,7 +46,7 @@ export class SettingsPage {
     // this.firmwareVersion = navParams.get("firmwareVersion");
     this.deviceObject = this.pcmChannelDataservice.deviceObjectGlobal;
     this.deviceName = this.deviceObject.deviceName;
-    this.appVersion = "2.11";
+    this.appVersion = Constants.values["app-version"];
     this.writeStatus = this.pcmchanneldataservice.passwordFlag;
   }
 

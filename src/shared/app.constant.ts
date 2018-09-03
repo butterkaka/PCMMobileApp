@@ -182,7 +182,10 @@ export const Constants = {
 
     },
     'values': {
+        'app-version': '1.0',
+        'scandata':'C0E0',
         'characteristicIDToUse': 'f000c0e1-0451-4000-b000-000000000000',
+        'serviceUUDIToUse': 'f000c0e0-0451-4000-b000-000000000000',
         'deviceObject': 'deviceObject',
         'read': 'read',
         'write': 'write',

@@ -63,7 +63,6 @@ export class DeviceMainPage {
     //this.deviceObject = navParams.get(Constants.values.deviceObject);
     this.deviceObject = this.pcmChannelDataservice.deviceObjectGlobal;
     this.deviceName = this.deviceObject.deviceName;
-
   }
 
 

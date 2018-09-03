@@ -6,6 +6,8 @@ import { BLE } from '@ionic-native/ble';
 import { PCMChannelDataService } from '../../providers/pcm-channel-data-service'
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
 
+import { UtilsService } from './../../shared/utilsService';
+
 /**
  * Generated class for the PumpSetupPage page.
  *
@@ -15,6 +17,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-pump-setup-page',
   templateUrl: 'pump-setup-page.html',
+  providers: [UtilsService]
 })
 export class PumpSetupPage {
   headerLabel = "Pump setup";
@@ -54,8 +57,14 @@ export class PumpSetupPage {
    * @param loadingController LoadingController for UI
    * @param pcmchanneldataservice PCMChannelDataService for UI 
    */
-  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
-    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService) {
+  constructor(public navCtrl: NavController, 
+    public navParams: NavParams, 
+    public alertCtrl: AlertController,
+    private ble: BLE, 
+    private cd: ChangeDetectorRef, 
+    public loadingController: LoadingController, 
+    public pcmchanneldataservice: PCMChannelDataService,
+    public utilsService: UtilsService) {
     this.deviceObject = navParams.get("deviceObject");
 
     this.items = JSON.parse(JSON.stringify(pcmchanneldataservice.pumpSetupItems));
@@ -65,6 +74,7 @@ export class PumpSetupPage {
   * @event ionViewDidLoad PageLoad Event  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log('ionViewDidLoad PumpSetup');
 
   }
@@ -73,10 +83,11 @@ export class PumpSetupPage {
     this.disabled = false;
     setTimeout(() => {
       this.readPumpSetupParameters();
-    },300);
+    },100);
     setTimeout(() => {
       this.readPumpSetupParameters();
-    },200);
+    },300);
+    this.utilsService.hideLoading();
     //this.setTimeoutForViewUpdate();
   }
 

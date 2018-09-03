@@ -7,6 +7,8 @@ import { PCMChannelDataService } from '../../providers/pcm-channel-data-service'
 import { LiveTunePage } from './../live-tune-page/live-tune-page';
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
 
+import { UtilsService } from './../../shared/utilsService';
+
 /**
  * Generated class for the SwashAngleSetupPage page.
  *
@@ -17,6 +19,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-swash-angle-setup',
   templateUrl: 'swash-angle-setup.html',
+  providers: [UtilsService]
 })
 export class SwashAngleSetupPage {
   headerLabel = "Swash angle Setup";
@@ -60,7 +63,7 @@ export class SwashAngleSetupPage {
  * @param pcmchanneldataservice PCMChannelDataService for UI 
  */
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
-    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService) { //,public alertService:AlertServiceProvider
+    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService, public utilsService: UtilsService) { //,public alertService:AlertServiceProvider
     //this.deviceObject = navParams.get(Constants.values.deviceObject);
     this.deviceObject = pcmchanneldataservice.deviceObjectGlobal;
     this.items = pcmchanneldataservice.swashAngleSetupItems;
@@ -72,6 +75,7 @@ export class SwashAngleSetupPage {
   * @event ionViewDidLoad PageLoad Event  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log(Constants.messages.ionViewDidLoadSwashAngleSetupPage);
     //this.readRegualtorSetupParameters();
   }
@@ -82,9 +86,9 @@ export class SwashAngleSetupPage {
   ionViewDidEnter() {
     this.disabled=false;
     this.initializeStartNotify();
-
     this.readRegualtorSetupParameters();
     this.startReadWithInterval(3);
+    this.utilsService.hideLoading();
   }
 
       /**
@@ -123,20 +127,24 @@ export class SwashAngleSetupPage {
     this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
   }
 
+
   startReadWithInterval(count:number = 0){
     count = Math.abs(count);
     let infinite = count == 0 ? true : false;
 
     this.intervalId = setInterval(()=> {
+      this.utilsService.presentLoading();
       count--;
-      if(count == 0 && !infinite)
+      if(count == 0 && !infinite){
         clearInterval(this.intervalId);
+        this.utilsService.hideLoading();
+      }
       this.readRegualtorSetupParameters();
     }, 1000);
   }
 
   /** 
-  * This is used to read the swashAngle setup paraemtrs from the device.  
+  * This is used to read the swashAngle setup parameters from the device.  
   */
  readRegualtorSetupParameters() {
     this.operation = Constants.values.read;

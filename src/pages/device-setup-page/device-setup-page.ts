@@ -44,7 +44,6 @@ export class DeviceSetupPage {
   paramterFileObject;
   isReadRunning = false;
   isFileCreated = false;
-  isLoading = false;
   parameterObjectLoad;
   intervalId;
   readIntervalCount: number = 0;
@@ -55,6 +54,8 @@ export class DeviceSetupPage {
   platformSpeceficProvidedFileName;
   parameterFileObjectIdMapped;
   headerLabel = "Device setup";
+  isLoading: boolean = false;
+
   //FilePicker: any;
 
   items;
@@ -110,6 +111,7 @@ export class DeviceSetupPage {
     this.functionInputParameterList = [];
     this.operation = "";
     this.readIntervalCount = 0;
+    this.isLoading = true;
 
     // prepare list to use when reading connector setup
     PcmParameterDataSaveServiceProvider.getAllParametersList().forEach(element => {
@@ -236,8 +238,10 @@ export class DeviceSetupPage {
 
     this.intervalId = setInterval(()=> {
       count--;
-      if(count == 0 && !infinite)
+      if(count == 0 && !infinite){
         clearInterval(this.intervalId);
+        this.isLoading = false;
+      }
       this.readConnectorParameter();
     }, 1000);
   }
@@ -1003,7 +1007,9 @@ export class DeviceSetupPage {
     }, 4000);
   }
 
-
+  checkIfLoading(){
+    return this.isLoading;
+  }
 
   /**
   * This function will check the status of wirte to device from file object

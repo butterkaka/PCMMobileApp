@@ -8,6 +8,8 @@ import { Chart } from 'chart.js';
 import { Storage } from '@ionic/storage';
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
 
+import { UtilsService } from './../../shared/utilsService';
+
 /**
  * Generated class for the ConnectorParameterSetupPage page.
  *
@@ -18,6 +20,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-connector-parameter-setup',
   templateUrl: 'connector-parameter-setup.html',
+  providers: [UtilsService]
 })
 export class ConnectorParameterSetupPage {
   connector;
@@ -110,7 +113,7 @@ export class ConnectorParameterSetupPage {
   };
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public pcmchanneldataservice: PCMChannelDataService, private cd: ChangeDetectorRef,
-    public alertCtrl: AlertController, private ble: BLE, public keyboard: Keyboard, private storage: Storage) {
+    public alertCtrl: AlertController, private ble: BLE, public keyboard: Keyboard, private storage: Storage, public utilsService: UtilsService) {
 
     this.connector = navParams.get(Constants.values.connector);
     this.connectorValObj = navParams.get(Constants.values.connectorValObj);
@@ -127,6 +130,7 @@ export class ConnectorParameterSetupPage {
   * @event ionViewDidEnter  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log('ionViewDidLoad ConnectorParameterSetupPage');
     console.log('ionViewDidLoad pressureDisplayUnit', this.pcmchanneldataservice.pressureDisplayUnit);
     console.log('ionViewDidLoad temperatureDisplayUnit', this.pcmchanneldataservice.temperatureDisplayUnit);
@@ -157,8 +161,8 @@ export class ConnectorParameterSetupPage {
       this.startGraphUpdate();
       this.addGraph();
     }, 100);
-
     this.SetTimeoutForViewUpdate();
+    this.utilsService.hideLoading();
   }
 
   /**

@@ -12,6 +12,8 @@ import { AtmAuthenticationTypeModel } from '../../Models/AtmAuthenticationModel'
 import { Storage } from '@ionic/storage';
 import { registerModuleFactory } from '@angular/core/src/linker/ng_module_factory_loader';
 import { TimeoutDebouncer } from 'ionic-angular/umd/util/debouncer';
+
+import { UtilsService } from '../../shared/utilsService';
 /**
  * Generated class for the ScanDevicePage page.
  *
@@ -22,9 +24,12 @@ import { TimeoutDebouncer } from 'ionic-angular/umd/util/debouncer';
 @Component({
   selector: 'page-scan-device-page',
   templateUrl: 'scan-device-page.html',
+  providers: [UtilsService]
 })
 export class ScanDevicePage {
   favorites = [];
+
+  appVersion = Constants.values["app-version"];
   devices;
   splash = this.isSplashShown() ? false : true; //Make true if you want to recreate the new splash screen and uncomment in HTML
   isScanning;
@@ -59,14 +64,16 @@ export class ScanDevicePage {
  * @param pcmchanneldataservice PCMChannelDataService
  */
   constructor(public navCtrl: NavController, public navParams: NavParams,
-    private ble: BLE, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService, public alertCtrl: AlertController,
+    private ble: BLE, 
+    public pcmchanneldataservice: PCMChannelDataService, 
+    public alertCtrl: AlertController,
+    public utilsService: UtilsService,
     private idle: Idle, private storage: Storage) {
     this.devices = [
       { "name": "PCM device 1" },
       { "name": "PCM device 1" },
       { "name": "PCM device 1" }
     ];
-
   }
 
   /** 
@@ -198,7 +205,8 @@ export class ScanDevicePage {
     //   alert(this.scanError);
     // });
 
-    this.ble.scan([],5).subscribe(
+
+    this.ble.scan([Constants.values.scandata],5).subscribe(
       device => { this.deviceFound(device) }, 
       error => {
         this.scanError = JSON.stringify(error);
@@ -244,11 +252,12 @@ export class ScanDevicePage {
         //console.log("advert data:" + JSON.stringify(device.advertising));
 
         //var SERVICE_DATA_KEY = '0x02';
-        //var advertisingData = this.parseAdvertisingData(device.advertising);
+        var advertisingData = this.parseAdvertisingData(device.advertising);
         //var serviceData = advertisingData[SERVICE_DATA_KEY];
         //console.log("advert content:" + serviceData);
 
-        //console.log(this.bytesToString(serviceData));
+        console.log("### " + device.name + " ###");
+        console.log(advertisingData);
         this.devices.push(device);
     }
   }
@@ -405,12 +414,8 @@ asHexString(i) {
       },
       () => { console.log("# GOOD! you're disconnected before connection try #")}
     );
-    
-    let loader = this.loadingController.create({
-      content: Constants.messages.connecting
-    });
 
-    loader.present();
+    this.utilsService.presentLoading(Constants.messages.connecting);
 
     console.log("trying to connect in connectToDevice: " + device.id);
 
@@ -428,14 +433,14 @@ asHexString(i) {
       this.isChracteristicExist_v = this.isCharacteristicExist();
       if (!this.isChracteristicExist_v) {
         console.log(Constants.messages.characteristicNotFound);
-        loader.dismiss();
+        this.utilsService.hideLoading();
         this.disconnectBle(device.id);
       }
       else {
         this.deviceObject = new DeviceModel(deviceData.name, deviceData.id, this.serviceUUID, deviceData.rssi, this.characteristicIDToUse);
         this.pcmchanneldataservice.deviceIdGlobal = this.deviceObject.deviceId;
         this.pcmchanneldataservice.deviceObjectGlobal = this.deviceObject;
-        loader.dismiss();
+        this.utilsService.hideLoading();
         // setTimeout(()=>{
         //   this.enterPasswordPrompt();
         // },100);
@@ -446,7 +451,7 @@ asHexString(i) {
     },
     error => {
       console.log(Constants.messages.errorConnect);
-      loader.dismiss();
+      this.utilsService.hideLoading();
       this.presentBleConnectionAlert(Constants.messages.bluetoothConnection, Constants.messages.bluetoothConnectionMessage);
       this.disconnectBle(device.id);
       //this.scanDevices();
@@ -469,7 +474,7 @@ asHexString(i) {
 
       console.log("connect timeout");
       clearInterval(this.intervalId);
-      loader.dismiss();
+      this.utilsService.hideLoading();
     }, 4000);
 
 

@@ -6,6 +6,10 @@ import { BLE } from '@ionic-native/ble';
 import { PCMChannelDataService } from '../../providers/pcm-channel-data-service';
 import { LiveTunePage } from './../live-tune-page/live-tune-page';
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
+
+import { UtilsService } from './../../shared/utilsService';
+
+
 /**
  * Generated class for the PressureRegulatorSetupPage page.
  *
@@ -16,6 +20,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-pressure-regulator-setup',
   templateUrl: 'pressure-regulator-setup.html',
+  providers: [UtilsService]
 })
 export class PressureRegulatorSetupPage {
   headerLabel="Pressure regulator setup";
@@ -37,6 +42,7 @@ export class PressureRegulatorSetupPage {
   atmQuestionObjectList: Array<AtmQuestionTypeModel>;
   atmQuestionInputObjList: Array<AtmQuestionTypeModel>;
   countAtmQList: number = 0;
+  intervalId;
 
   operation: string;
 
@@ -62,7 +68,7 @@ export class PressureRegulatorSetupPage {
  * @param pcmchanneldataservice PCMChannelDataService for UI 
  */
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController,
-    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService) { //,public alertService:AlertServiceProvider
+    private ble: BLE, private cd: ChangeDetectorRef, public loadingController: LoadingController, public pcmchanneldataservice: PCMChannelDataService, public utilsService: UtilsService) { //,public alertService:AlertServiceProvider
     //this.deviceObject = navParams.get(Constants.values.deviceObject);
     this.deviceObject = pcmchanneldataservice.deviceObjectGlobal;
     this.items = pcmchanneldataservice.pressureRegulatorSetupItems;
@@ -74,6 +80,7 @@ export class PressureRegulatorSetupPage {
   * @event ionViewDidLoad PageLoad Event  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log(Constants.messages.ionViewDidLoadPressureRegulatorSetupPage);
     //this.readRegualtorSetupParameters();
   }
@@ -84,13 +91,12 @@ export class PressureRegulatorSetupPage {
   ionViewDidEnter() {
     this.disabled = false;
     this.initializeStartNotify();
+
+    //this.utilsService.presentLoading();
+    
     this.readRegualtorSetupParameters();
-    setTimeout(() => {
-      this.readRegualtorSetupParameters();
-    },400);
-    setTimeout(() => {
-      this.readRegualtorSetupParameters();
-    },200);
+    this.startReadWithInterval(3);
+    this.utilsService.hideLoading();
 
     //this.setTimeoutForViewUpdate();
   }
@@ -134,6 +140,21 @@ export class PressureRegulatorSetupPage {
       var byteArray = new Uint8Array([element.rType, 0, element.channel, element.subchannel, 0, 0]);
       this.write(this.deviceObject.deviceId, this.deviceObject.serviceUUID, this.deviceObject.characteristicId, byteArray.buffer);
     });
+  }
+
+  startReadWithInterval(count:number = 0){
+    count = Math.abs(count);
+    let infinite = count == 0 ? true : false;
+
+    this.intervalId = setInterval(()=> {
+      this.utilsService.presentLoading();
+      count--;
+      if(count == 0 && !infinite){
+        clearInterval(this.intervalId);
+        this.utilsService.hideLoading();
+      }
+      this.readRegualtorSetupParameters();
+    }, 1000);
   }
 
   /** 

@@ -7,6 +7,8 @@ import { PCMChannelDataService } from '../../providers/pcm-channel-data-service'
 import { Constants } from './../../shared/app.constant';
 import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationModel';
 
+import { UtilsService } from './../../shared/utilsService';
+
 /**
  * Generated class for the AlarmLogPage page.
  *
@@ -17,6 +19,7 @@ import { AtmAuthenticationTypeModel } from './../../Models/AtmAuthenticationMode
 @Component({
   selector: 'page-alarm-log-page',
   templateUrl: 'alarm-log-page.html',
+  providers: [UtilsService]
 })
 export class AlarmLogPage {
 
@@ -56,8 +59,7 @@ export class AlarmLogPage {
  * @param navParams NavParams paremters from previous component
  */
   constructor(public navCtrl: NavController, public navParams: NavParams, public pcmchanneldataservice: PCMChannelDataService,
-    private ble: BLE, private cd: ChangeDetectorRef, public alertCtrl: AlertController, ) {
-
+    private ble: BLE, private cd: ChangeDetectorRef, public alertCtrl: AlertController, public utilsService: UtilsService ) {
     this.deviceObject = pcmchanneldataservice.deviceObjectGlobal;
 
   }
@@ -66,8 +68,8 @@ export class AlarmLogPage {
   * @event ionViewDidLoad PageLoad Event  
   */
   ionViewDidLoad() {
+    this.utilsService.presentLoading();
     console.log('ionViewDidLoad AlarmLogPage');
-
   }
 
   /**
@@ -88,6 +90,7 @@ export class AlarmLogPage {
 
     this.readAlarmsandWarnings();
     this.startReadWithInterval();
+    this.utilsService.hideLoading();
 
     // setTimeout(() => {
     //   this.readAlarmsandWarnings();
@@ -116,9 +119,12 @@ export class AlarmLogPage {
     let infinite = count == 0 ? true : false;
 
     this.intervalId = setInterval(()=> {
+      this.utilsService.presentLoading();
       count--;
-      if(count == 0 && !infinite)
+      if(count == 0 && !infinite){
         clearInterval(this.intervalId);
+        this.utilsService.hideLoading();
+      }
       this.readAlarmsandWarnings();
     }, 8000);
   }

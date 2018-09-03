@@ -95,8 +95,9 @@
     <ion-card padding>
         <ion-card-header no-padding>
             <strong>Assigned connectors: {{ connectorUIList.length }} </strong>
-            <ion-icon style="float: right;" (click)="readConnectorParameter()" name="refresh">
-            </ion-icon>
+            <ion-spinner *ngIf="checkIfLoading()" style="float: right;" icon="ios-small"></ion-spinner>
+            <!-- <ion-icon style="float: right;" (click)="readConnectorParameter()" name="refresh"> 
+            </ion-icon>-->
         </ion-card-header>
         <!-- <hr size="4px" />
         <button ion-button padding block (tap)="readConnectorParameter()">Refresh list</button> -->
