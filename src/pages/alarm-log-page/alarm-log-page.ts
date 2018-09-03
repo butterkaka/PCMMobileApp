@@ -117,16 +117,14 @@ export class AlarmLogPage {
   startReadWithInterval(count:number = 0){
     count = Math.abs(count);
     let infinite = count == 0 ? true : false;
-
+    
     this.intervalId = setInterval(()=> {
-      this.utilsService.presentLoading();
       count--;
       if(count == 0 && !infinite){
         clearInterval(this.intervalId);
-        this.utilsService.hideLoading();
       }
       this.readAlarmsandWarnings();
-    }, 8000);
+    }, 12000);
   }
 
   /** 

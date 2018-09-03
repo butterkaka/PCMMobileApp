@@ -133,11 +133,9 @@ export class SwashAngleSetupPage {
     let infinite = count == 0 ? true : false;
 
     this.intervalId = setInterval(()=> {
-      this.utilsService.presentLoading();
       count--;
       if(count == 0 && !infinite){
         clearInterval(this.intervalId);
-        this.utilsService.hideLoading();
       }
       this.readRegualtorSetupParameters();
     }, 1000);
